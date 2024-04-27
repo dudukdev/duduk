@@ -1,0 +1,26 @@
+{
+  "name": "@framework/server",
+  "version": "0.0.0",
+  "type": "module",
+  "author": "Veit Kunz <git@veit-kunz.de>",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "bin": {
+    "bundle": "dist/bin/bundle.mjs"
+  },
+  "main": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "esbuild": "^0.20.2",
+    "jsdom": "^24.0.0",
+    "mime": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.6"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "framework",
+  "version": "0.0.0",
+  "private": "true",
+  "type": "module",
+  "scripts": {
+    "build": "unbuild"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "packages/components",
+    "packages/content-negotiation",
+    "packages/localization",
+    "packages/server"
+  ],
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "typescript": "^5.4.5",
+    "unbuild": "^2.0.0"
+  }
+}
