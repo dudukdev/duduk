@@ -4,8 +4,7 @@
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
   "files": [
-    "dist",
-    "src/bin"
+    "dist"
   ],
   "bin": {
     "bundle": "dist/bin/bundle.mjs"
