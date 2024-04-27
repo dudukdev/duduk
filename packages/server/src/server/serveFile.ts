@@ -20,8 +20,8 @@ export function serveFile(req: Parameters<RequestListener>[0], res: Parameters<R
   }
 
   res.writeHead(200, {
-    'Content-Type': mime.getType(file),
-    'Content-Length': stat.size
+    'Content-Type': mime.getType(file) ?? undefined,
+    'Content-Length': `${stat.size}`
   });
   const readStream = fs.createReadStream(file);
   readStream.pipe(res);

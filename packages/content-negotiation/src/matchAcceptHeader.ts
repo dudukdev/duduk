@@ -14,6 +14,8 @@ export function matchAcceptHeader(acceptHeader: string, toCheck: string[]): stri
 
             const [aType, aSubType] = aMime.split('/');
             const [bType, bSubType] = bMime.split('/');
+
+            return 0;
         } else {
             return a.weight > b.weight ? -1 : 1;
         }

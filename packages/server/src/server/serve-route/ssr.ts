@@ -44,12 +44,12 @@ function getLinker(basePath: string): vm.ModuleLinker {
     specifier = path.normalize(`${basePath}/${specifier}`);
 
     if (moduleCache.has(specifier)) {
-      return moduleCache.get(specifier);
+      return moduleCache.get(specifier)!;
     }
 
     let fileContent = '';
     if (fileCache.has(specifier)) {
-      fileContent = fileCache.get(specifier);
+      fileContent = fileCache.get(specifier) ?? '';
     } else {
       fileContent = fs.readFileSync(specifier, {encoding: 'utf-8'});
       fileCache.set(specifier, fileContent);

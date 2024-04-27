@@ -8,7 +8,7 @@ fs.mkdirSync('dist/__app', {recursive: true});
 
 const entryPoints: string[] = [];
 
-const readFolder = (folder) => {
+const readFolder = (folder: string) => {
   const items = fs.readdirSync(folder);
   for (const itemName of items) {
     const itemPath = path.join(folder, itemName);

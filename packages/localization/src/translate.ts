@@ -24,7 +24,7 @@ export function translate(id: string, options: {plural?: number | Record<string,
           keyNames.add(varName);
           setKey[varName] = count;
         }
-        setKey = Object.keys(setKey).sort().reduce((acc, key) => {acc[key] = setKey[key]; return acc}, {});
+        setKey = Object.keys(setKey).sort().reduce((acc: Record<string, string>, key) => {acc[key] = setKey[key]; return acc}, {});
         pluralSet.set(JSON.stringify(setKey), stringValue[key]);
       }
 
@@ -46,9 +46,9 @@ export function translate(id: string, options: {plural?: number | Record<string,
           pluralValues[keyName] = format.format(options.plural[keyName] ?? 0);
         }
       }
-      setKey = Object.keys(setKey).sort().reduce((acc, key) => {acc[key] = setKey[key]; return acc}, {});
+      setKey = Object.keys(setKey).sort().reduce((acc: Record<string, string>, key) => {acc[key] = setKey[key]; return acc}, {});
 
-      const pluralizedString = pluralSet.get(JSON.stringify(setKey));
+      const pluralizedString = pluralSet.get(JSON.stringify(setKey)) ?? '';
       return applyPlaceholder(pluralizedString, pluralValues);
     }
   }

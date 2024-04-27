@@ -17,11 +17,11 @@ export function injectI18n(parent: HTMLElement): void {
 
     for (const attribute of element.attributes) {
       if (attribute.name === 'data-i18n') {
-        content = element.textContent;
+        content = element.textContent ?? '';
       } else if (attribute.name.startsWith('data-i18n-')) {
         const attributeName = attribute.name.substring(10);
         if (element.hasAttribute(attributeName)) {
-          attributes[attributeName] = element.getAttribute(attributeName);
+          attributes[attributeName] = element.getAttribute(attributeName)!;
         }
       }
     }

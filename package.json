@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "unbuild",
+    "check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },

@@ -8,18 +8,19 @@ export async function executeServer(req: IncomingMessage, res: Parameters<Reques
 
   let cumulatedData = {};
   for (const routePart of stack) {
-    if (routePart.layoutServer !== undefined && method in routePart.layoutServer && routePart.layoutServer[method] !== undefined) {
-      const httpHandler = routePart.layoutServer[method];
+    const httpHandler = routePart.layoutServer?.[method];
+    if (httpHandler !== undefined) {
       cumulatedData = {...cumulatedData, ...await httpHandler({request: req, data: cumulatedData})};
     }
   }
 
   const lastPart = stack[stack.length - 1];
-  if (lastPart.pageServer === undefined || !(method in lastPart.pageServer) || lastPart.pageServer[method] === undefined) {
+  const httpHandler = lastPart.pageServer?.[method];
+  if (httpHandler === undefined) {
     res.writeHead(500);
     res.end('500 Internal Server Error');
     return;
   }
-  const httpHandler = lastPart.pageServer[method];
+
   await httpHandler({request: req, response: res, data: cumulatedData, params});
 }

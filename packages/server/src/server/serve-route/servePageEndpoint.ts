@@ -1,9 +1,17 @@
+import type {LocaleStrings} from "@framework/localization/src/data";
 import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
 import mime from "mime";
 import {ssr} from "./ssr";
 import fsPromise from "node:fs/promises";
 import {parseHeader} from "@framework/content-negotiation";
+
+interface Globals {
+  pageData: object;
+  pageParams: Record<string, string>;
+  prependStyles: string;
+  locales?: LocaleStrings;
+}
 
 const rootCss: string | undefined = await (async function () {
   const folder = `${import.meta.dirname}/__app`;
@@ -96,16 +104,20 @@ async function render(req: IncomingMessage, res: Parameters<RequestListener>[1],
 
   const prependStyles = `@import url("${appCss}");`;
 
-  const globals = {pageData: data, pageParams: params, prependStyles};
+  const globals: Globals = {
+    pageData: data,
+    pageParams: params,
+    prependStyles
+  };
   const locales = getLocaleStrings?.(req.headers['accept-language'] ?? []);
   if (locales !== undefined && Object.entries(locales).length > 0) {
-    globals['locales'] = locales;
+    globals.locales = locales;
   }
   const languages = parseHeader(req.headers['accept-language'] ?? '').map(v => v.value);
   const url = req.headers.referer ?? `https://${(req.headers.origin ?? req.headers.host ?? 'localhost')}${req.url}`;
   const serverSideRenderedHtml = await ssr(html, `${imports.join('')} ${customElementsDefines.join('')}`, globals, languages, url);
 
-  res.writeHead(200, {'Content-Type': mime.getType('html')});
+  res.writeHead(200, {'Content-Type': mime.getType('html') ?? undefined});
   res.end(`
 <!DOCTYPE html>
 <html>

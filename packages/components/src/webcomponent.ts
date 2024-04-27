@@ -32,8 +32,8 @@ export class WebComponent extends HTMLElement {
             const styles = new.target.styles ?? css``;
 
             this.attachShadow({mode: 'open'});
-            this.shadowRoot.appendChild(styles.cloneNode(true));
-            this.shadowRoot.appendChild(template.cloneNode(true));
+            this.shadowRoot!.appendChild(styles.cloneNode(true));
+            this.shadowRoot!.appendChild(template.cloneNode(true));
         }
     }
 
@@ -43,26 +43,30 @@ export class WebComponent extends HTMLElement {
             const property = this.#properties[name];
             switch (property.type) {
                 case String:
+                    // @ts-ignore
                     this[name] = newValue === null ? null : String(newValue);
                     break;
                 case Boolean:
+                    // @ts-ignore
                     this[name] = !!newValue || newValue === '';
                     break;
                 case Number:
+                    // @ts-ignore
                     this[name] = newValue === null ? null : Number(newValue);
                     break;
                 default:
+                    // @ts-ignore
                     this[name] = newValue;
             }
         }
     }
 
     getElement<T extends HTMLElement = HTMLElement>(refName: string): T | undefined {
-        return this.#getElementOfCollection(refName, this.shadowRoot.children) as T | undefined;
+        return this.#getElementOfCollection(refName, this.shadowRoot!.children) as T | undefined;
     }
 
     applyTemplate(refName: string, count: number): ApplyTemplateResult {
-        return this.#applyTemplateFromCollection(refName, count, this.shadowRoot.childNodes);
+        return this.#applyTemplateFromCollection(refName, count, this.shadowRoot!.childNodes);
     }
 
     #applyTemplateFromCollection(refName: string, count: number, childNodes: ChildNode[] | NodeListOf<ChildNode>): ApplyTemplateResult {
@@ -111,7 +115,7 @@ export class WebComponent extends HTMLElement {
 
             result.push({
                 childNodes,
-                getElement: <T extends HTMLElement = HTMLElement>(refName: string): T => this.#getElementOfCollection(refName, childNodes) as T | undefined,
+                getElement: <T extends HTMLElement = HTMLElement>(refName: string): T | undefined => this.#getElementOfCollection(refName, childNodes) as T | undefined,
                 applyTemplate: (refName, count) => this.#applyTemplateFromCollection(refName, count, childNodes)
             });
 

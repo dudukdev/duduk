@@ -19,7 +19,8 @@ await (async function () {
 })();
 
 export async function serveRoute(req: IncomingMessage, res: Parameters<RequestListener>[1]): Promise<boolean> {
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const url = new URL(req.url ?? '/', `http://${req.headers.host}`);
+  const requestedMethod = req.method ?? 'GET';
   const pathParts = url.pathname.split('/');
   pathParts.shift();
   if (pathParts[pathParts.length - 1] === '') {
@@ -38,7 +39,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
 
   switch (matchAcceptHeader(accept, ['text/html', 'application/json'])) {
     case 'text/html':
-      if (req.method === 'GET') {
+      if (requestedMethod === 'GET') {
         await printPage(req, res, stack, params);
       } else {
         res.writeHead(405);
@@ -46,7 +47,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
       }
       break;
     case 'application/json':
-      if (req.method in stack[stack.length - 1].pageServer) {
+      if (requestedMethod in (stack[stack.length - 1].pageServer ?? {})) {
         await executeServer(req, res, stack, params);
       } else {
         res.writeHead(405);
@@ -63,7 +64,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
 
 function getStack(pathParts: string[], part: RoutePart, stack: RoutePart[], params: Record<string, string>): { stack: RoutePart[]; params: Record<string, string> } | undefined {
   if (pathParts.length > 0) {
-    const nextPathPart = pathParts.shift();
+    const nextPathPart = pathParts.shift() ?? '';
     const nextRoutePart = part.routes.get(nextPathPart) ?? part.paramRoute;
     if (nextRoutePart === undefined) {
       return undefined;
