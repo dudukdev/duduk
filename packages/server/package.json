@@ -5,7 +5,7 @@
   "author": "Veit Kunz <git@veit-kunz.de>",
   "files": [
     "dist",
-    "bin"
+    "src/bin"
   ],
   "bin": {
     "bundle": "dist/bin/bundle.mjs"

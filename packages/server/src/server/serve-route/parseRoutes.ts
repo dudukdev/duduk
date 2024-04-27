@@ -1,7 +1,7 @@
-import type {RoutePart} from "./models.js";
+import type {RoutePart} from "./models";
 import fsPromise from "node:fs/promises";
 import path from "node:path";
-import {uniqueIdFromString} from "../unique-ids.js";
+import {uniqueIdFromString} from "../unique-ids";
 
 export async function getRoutes(): Promise<RoutePart> {
   const routes: RoutePart = {

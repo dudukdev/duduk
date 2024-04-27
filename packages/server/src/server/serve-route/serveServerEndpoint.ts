@@ -1,5 +1,5 @@
 import type {IncomingMessage, RequestListener} from "node:http";
-import type {RoutePart} from "./models.js";
+import type {RoutePart} from "./models";
 
 type Methods = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 

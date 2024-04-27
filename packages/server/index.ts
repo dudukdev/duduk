@@ -4,12 +4,5 @@ declare global {
   }
 }
 
-export * from './server/serve-route/models.js';
-
-export function getData<T = object>(): T | undefined {
-  return window.__app?.pageData ?? {} as T;
-}
-
-export function getParams(): Record<string, string> {
-  return window.__app.pageParams;
-}
+export type {PageServerDataFunction, PageServerHttpFunction, LayoutServerDataFunction, LayoutServerHttpFunction} from './src/server/serve-route/models';
+export {getData, getParams} from './src/getter';

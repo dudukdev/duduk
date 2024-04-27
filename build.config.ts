@@ -27,7 +27,7 @@ export default defineBuildConfig([
     },
     {
         rootDir: './packages/server',
-        entries: ['./index.ts', './bin/bundle.ts'],
+        entries: ['./index.ts', './src/bin/bundle.ts'],
         declaration: 'node16',
         externals: [
             /@framework\/.*/ug,

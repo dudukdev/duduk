@@ -1,7 +1,7 @@
-import type {RoutePart} from "./models.js";
+import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
 import mime from "mime";
-import {ssr} from "./ssr.js";
+import {ssr} from "./ssr";
 import fsPromise from "node:fs/promises";
 import {parseHeader} from "@framework/content-negotiation";
 
