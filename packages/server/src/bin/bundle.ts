@@ -36,12 +36,12 @@ readFolder('src/routes');
   }
 });
 
-entryPoints.push('inject/locales.ts');
+entryPoints.push('inject/locales.mjs');
 
 esbuild.context({
   entryPoints,
   entryNames: '[dir]/[name]-[hash]',
-  nodePaths: ['node_modules/@framework/server'],
+  nodePaths: ['node_modules/@framework/server/dist'],
   outbase: 'src',
   bundle: true,
   outdir: 'dist/__app',
@@ -60,7 +60,7 @@ esbuild.context({
 })
 
 esbuild.context({
-  entryPoints: ['node_modules/@framework/server/server/index.ts'],
+  entryPoints: ['node_modules/@framework/server/src/server/index.ts'],
   outdir: 'dist',
   bundle: true,
   platform: 'node',
