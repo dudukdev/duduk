@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE topic
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/xhtml-entities.dtd">
+<topic xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/topic.v2.xsd"
+       title="Home" id="home" help-id="Home">
+
+    <section-starting-page>
+        <title>Framework</title>
+        <description>
+            Build Web Apps without magic syntax. Based on native technology.
+        </description>
+
+        <spotlight>
+            <a href="Why-native.md" type="tools" summary="Why using native technology is better">Why Native</a>
+            <a href="Getting-Started.md" type="start" summary="Create your own application">Getting started</a>
+        </spotlight>
+
+        <primary>
+            <title>Packages</title>
+            <a href="framework-components.md" type="container" summary="Build native web components">Components</a>
+            <a href="framework-server.md" type="cloud" summary="Create a web server">Server</a>
+            <a href="framework-localization.md" type="world" summary="Built-in support for multiple languages">Localization</a>
+            <a href="framework-content-negotiation.md" type="branch" summary="Serve different resources based on user decision">Content Negotiation</a>
+        </primary>
+        
+        <secondary>
+            <title>Other</title>
+            <a href="">Other</a>
+            <a href="">Other</a>
+        </secondary>
+    </section-starting-page>
+
+</topic>

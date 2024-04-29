@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/writerside/1.0/redirection-rules.dtd">
+<rules>
+    <!-- format is as follows
+    <rule id="<unique id>">
+        <accepts>page.html</accepts>
+    </rule>
+    -->
+    <rule id="47f2e548">
+        <description>Created after removal of "Home" from Framework</description>
+        <accepts>Welcome.html</accepts>
+    </rule>
+    <rule id="2f7c2ca6">
+        <description>Created after removal of "@framework/components" from Framework</description>
+        <accepts>framework-components.html</accepts>
+    </rule>
+    <rule id="5394ceb7">
+        <description>Created after removal of "Starter" from Framework</description>
+        <accepts>starter.html</accepts>
+    </rule>
+    <rule id="47d23702">
+        <description>Created after removal of "Tutorial" from Framework</description>
+        <accepts>Tutorial.html</accepts>
+    </rule>
+    <rule id="5614d4dc">
+        <description>Created after removal of "Reference" from Framework</description>
+        <accepts>Reference.html</accepts>
+    </rule>
+    <rule id="5a8dd512">
+        <description>Created after removal of "Overview" from Framework</description>
+        <accepts>Overview.html</accepts>
+    </rule>
+    <rule id="2077d7c6">
+        <description>Created after removal of "How to" from Framework</description>
+        <accepts>How-to.html</accepts>
+    </rule>
+    <rule id="401b11a4">
+        <description>Created after removal of "How to" from Framework</description>
+        <accepts>How-to2.html</accepts>
+    </rule>
+    <rule id="176acad0">
+        <description>Created after removal of "Overview" from Framework</description>
+        <accepts>Overview2.html</accepts>
+    </rule>
+    <rule id="1947b7f6">
+        <description>Created after removal of "Reference" from Framework</description>
+        <accepts>Reference2.html</accepts>
+    </rule>
+    <rule id="5bf35838">
+        <description>Created after removal of "Tutorial" from Framework</description>
+        <accepts>Tutorial2.html</accepts>
+    </rule>
+    <rule id="654d9f80">
+        <description>Created after removal of "Section Starting Page" from Framework</description>
+        <accepts>Section-Starting-Page2.html</accepts>
+    </rule>
+    <rule id="9cade75">
+        <description>Created after removal of "Demo MD" from Framework</description>
+        <accepts>Empty-MD-Topic.html</accepts>
+    </rule>
+    <rule id="742a8621">
+        <description>Created after removal of "Demo XML" from Framework</description>
+        <accepts>Demo-XML.html</accepts>
+    </rule>
+</rules>

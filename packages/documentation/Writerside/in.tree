@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE instance-profile
+        SYSTEM "https://resources.jetbrains.com/writerside/1.0/product-profile.dtd">
+
+<instance-profile id="in"
+                 name="Framework"
+                 start-page="home.topic">
+
+    <toc-element topic="home.topic"/>
+    <toc-element topic="Why-native.md"/>
+    <toc-element topic="Getting-Started.md"/>
+    <toc-element topic="framework-components.md">
+        <toc-element topic="Create-Component.md"/>
+        <toc-element topic="Template.md"/>
+        <toc-element topic="Styles.md"/>
+        <toc-element topic="Properties.md"/>
+    </toc-element>
+    <toc-element topic="framework-server.md"/>
+    <toc-element topic="framework-localization.md"/>
+    <toc-element topic="framework-content-negotiation.md"/>
+</instance-profile>
