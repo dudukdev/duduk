@@ -6,7 +6,7 @@
   "scripts": {
     "build": "unbuild",
     "check": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:watch": "vitest"
   },
   "engines": {
@@ -21,6 +21,7 @@
   ],
   "devDependencies": {
     "@types/node": "^20.12.7",
+    "@vitest/coverage-v8": "^1.5.2",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
     "vitest": "^1.5.2"

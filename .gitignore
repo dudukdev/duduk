@@ -130,5 +130,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-.idea
+.idea/
 .DS_Store
+reports/
+coverage/

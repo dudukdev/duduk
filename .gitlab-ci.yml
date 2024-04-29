@@ -4,11 +4,29 @@ variables:
   DOCKER_VERSION: '241.15989'
 
 stages:
-  - build
   - test
+  - build
   - deploy
 
-build:
+unit tests:
+  stage: test
+  image: node:20-alpine
+  before_script:
+    - npm ci
+  script:
+    - npm run test
+  artifacts:
+    when: always
+    paths:
+      - reports
+      - coverage
+    reports:
+      junit: reports/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
+writerside build:
   stage: build
   image: registry.jetbrains.team/p/writerside/builder/writerside-builder:$DOCKER_VERSION
   script:
@@ -24,9 +42,11 @@ build:
       - public/report.json
     expire_in: 1 week
 
-test:
-  stage: test
+writerside check:
+  stage: build
   image: openjdk:18-jdk-alpine
+  needs:
+    - writerside build
   before_script:
     - apk add curl
   script:
@@ -39,11 +59,9 @@ pages:
   image: ubuntu:latest
   before_script:
     - apt-get update -y && apt-get install unzip -y
-
   script:
     - cd \public
     - unzip -O UTF-8 $ARTIFACT
-
   artifacts:
     paths:
       - public
