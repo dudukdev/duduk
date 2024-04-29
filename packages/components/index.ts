@@ -6,4 +6,4 @@ declare global {
 
 export {css} from './src/css';
 export {html} from './src/html';
-export {WebComponent, type ApplyTemplateResult} from './src/webcomponent';
+export {WebComponent, type ApplyTemplateResult, type Properties} from './src/webcomponent';

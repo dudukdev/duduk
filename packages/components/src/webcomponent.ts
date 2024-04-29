@@ -6,19 +6,20 @@ export type ApplyTemplateResult = {
     getElement: <T extends HTMLElement = HTMLElement>(refName: string) => (T | undefined);
     applyTemplate: (refName: string, count: number) => ApplyTemplateResult;
 }[];
+export type Properties = Record<string, { type: String | Boolean | Number | Object }>;
 
 export class WebComponent extends HTMLElement {
 
     static template?: DocumentFragment;
     static styles?: HTMLStyleElement;
-    static properties?: Record<string, { type: any }>;
+    static properties?: Properties;
 
     // noinspection JSUnusedGlobalSymbols
     static get observedAttributes(): string[] {
         return Object.keys(this.properties ?? {});
     }
 
-    readonly #properties: Record<string, { type: any }>;
+    readonly #properties: Properties;
 
     constructor() {
         super();
