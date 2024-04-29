@@ -1,6 +1,7 @@
 # Create Component
 
 <link-summary>Create components based on native web components.</link-summary>
+<show-structure for="chapter,procedure" depth="2"/>
 
 > It is best practice to create individual files for each component.
 > 
@@ -71,36 +72,47 @@ To use a component in an HTML file, you have to use a bundling tool, like Rollup
 
 A web component has different lifecycle methods. These methods are all methods of the native web component API. Please do not use any other native lifecycle methods, since some of them are used from this library.
 
-constructor
-: The constructor is called first after the element has been instantiated.
-```javascript
-constructor() {
-    super();
-    // custom code
-}
-```
+<procedure title="constructor">
+    <p>The constructor is called first after the element has been instantiated.</p>
+    <code-block lang="typescript">
+    <![CDATA[
+        constructor() {
+            super();
+            // custom code
+        }
+    ]]>
+    </code-block>
+</procedure>
 
-connectedCallback
-: Called each time the element is added to the document. The specification recommends that, as far as possible, developers should implement custom element setup in this callback rather than the constructor.
-```javascript
-connectedCallback() {
-    // custom code
-}
-```
+<procedure title="connectedCallback">
+    <p>Called each time the element is added to the document. The specification recommends that, as far as possible, developers should implement custom element setup in this callback rather than the constructor.</p>
+    <code-block lang="typescript">
+    <![CDATA[
+        connectedCallback() {
+            // custom code
+        }
+    ]]>
+    </code-block>
+</procedure>
 
-disconnectedCallback
-: Called each time the element is removed from the document.
-```javascript
-disconnectedCallback() {
-    // custom code
-}
-```
+<procedure title="disconnectedCallback">
+    <p>Called each time the element is removed from the document.</p>
+    <code-block lang="typescript">
+    <![CDATA[
+        disconnectedCallback() {
+            // custom code
+        }
+    ]]>
+    </code-block>
+</procedure>
 
-adoptedCallback
-: Called each time the element is moved to a new document.
-```javascript
-adoptedCallback() {
-    // custom code
-}
-```
-
+<procedure title="adoptedCallback">
+    <p>Called each time the element is moved to a new document.</p>
+    <code-block lang="typescript">
+    <![CDATA[
+        adoptedCallback() {
+            // custom code
+        }
+    ]]>
+    </code-block>
+</procedure>
