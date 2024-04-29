@@ -1,6 +1,6 @@
 variables:
-  INSTANCE: 'packages/documentation/Writerside/in'
-  ARTIFACT: 'webHelpHI2-all.zip'
+  INSTANCE: 'Writerside/in'
+  ARTIFACT: 'webHelpIN2-all.zip'
   DOCKER_VERSION: '241.15989'
 
 stages:
@@ -15,7 +15,7 @@ build:
     - set -e
     - export DISPLAY=:99
     - Xvfb :99 &
-    - /opt/builder/bin/idea.sh helpbuilderinspect -source-dir . -product $INSTANCE --runner gitlab -output-dir public/ || true
+    - /opt/builder/bin/idea.sh helpbuilderinspect -source-dir ./packages/documentation -product $INSTANCE --runner gitlab -output-dir public/ || true
     - echo "Testing existence of $ARTIFACT..."
     - test -e public/$ARTIFACT
   artifacts:
