@@ -29,6 +29,9 @@ unit tests:
 writerside build:
   stage: build
   image: registry.jetbrains.team/p/writerside/builder/writerside-builder:$DOCKER_VERSION
+  only:
+    changes:
+      - packages/documentation/**/*
   script:
     - set -e
     - export DISPLAY=:99
@@ -45,6 +48,9 @@ writerside build:
 writerside check:
   stage: build
   image: openjdk:18-jdk-alpine
+  only:
+    changes:
+      - packages/documentation/**/*
   needs:
     - writerside build
   before_script:
@@ -57,6 +63,11 @@ writerside check:
 pages:
   stage: deploy
   image: ubuntu:latest
+  only:
+    changes:
+      - packages/documentation/**/*
+    refs:
+      - main
   before_script:
     - apt-get update -y && apt-get install unzip -y
   script:
