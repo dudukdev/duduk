@@ -1,6 +1,3 @@
-import {css} from "./css";
-import {html} from "./html";
-
 export type ApplyTemplateResult = {
     childNodes: ChildNode[];
     getElement: <T extends HTMLElement = HTMLElement>(refName: string) => (T | undefined);
@@ -24,17 +21,21 @@ export class WebComponent extends HTMLElement {
     constructor() {
         super();
         if (new.target === WebComponent) {
-            throw new Error('Class WebComponent is an abstract class and cannot be instantiated directly');
+            throw new Error('Class WebComponent is an abstract class and cannot be used directly as component');
         }
         this.#properties = new.target.properties ?? {};
 
         if (!this.shadowRoot) {
-            const template = new.target.template ?? html``;
-            const styles = new.target.styles ?? css``;
+            const template = new.target.template;
+            const styles = new.target.styles;
 
             this.attachShadow({mode: 'open'});
-            this.shadowRoot!.appendChild(styles.cloneNode(true));
-            this.shadowRoot!.appendChild(template.cloneNode(true));
+            if (styles !== undefined) {
+              this.shadowRoot!.appendChild(styles.cloneNode(true));
+            }
+            if (template !== undefined) {
+              this.shadowRoot!.appendChild(template.cloneNode(true));
+            }
         }
     }
 
