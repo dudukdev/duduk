@@ -14,7 +14,7 @@ Basically, this library is just an extension to native web components. Native we
 Each component is a JavaScript class, which extends from `WebComponent`.
 
 ```javascript
-import {WebComponent, html, css} from "@framework/components";
+import {WebComponent, html, css} from "@duduk/components";
 
 class MyComponent extends WebComponent {
     static template = html`
@@ -42,7 +42,7 @@ To use a component, you have to import the JavaScript file, in which you registe
 You can use a component directly in another component.
 
 ```javascript
-import {WebComponent, html} from "@framework/components";
+import {WebComponent, html} from "@duduk/components";
 import './my-component';
 
 class OtherComponent extends WebComponent {

@@ -1,3 +1,3 @@
-# Why Native
+# @duduk/server
 
 Start typing here...

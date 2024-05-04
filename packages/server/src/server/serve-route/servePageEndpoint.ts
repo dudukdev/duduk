@@ -1,10 +1,10 @@
-import type {LocaleStrings} from "@framework/localization/src/data";
+import type {LocaleStrings} from "@duduk/localization/src/data";
 import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
 import mime from "mime";
 import {ssr} from "./ssr";
 import fsPromise from "node:fs/promises";
-import {parseHeader} from "@framework/content-negotiation";
+import {parseHeader} from "@duduk/content-negotiation";
 
 interface Globals {
   pageData: object;

@@ -2,7 +2,7 @@
 
 ## Before you start
 
-Before you can create an application with this framework, you need to make sure that you have installed at least version 20.0.0 of Node.js. You can check your installed version of Node.js with the following command.
+Before you can create an application with Duduk, you need to make sure that you have installed at least version 20.0.0 of Node.js. You can check your installed version of Node.js with the following command.
 
 ```bash
 node --version
@@ -22,7 +22,7 @@ Follow these steps to create the necessary project structure.
    <step>
       <p>Install dependencies</p>
       <code-block lang="bash">
-         npm install @framework/components @framework/server
+         npm install @duduk/components @duduk/server
       </code-block>
    </step>
    <step>

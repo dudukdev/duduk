@@ -6,22 +6,22 @@
        title="Home" id="home" help-id="Home">
 
     <section-starting-page>
-        <title>Framework</title>
+        <title>Duduk</title>
         <description>
             Build Web Apps without magic syntax. Based on native technology.
         </description>
 
         <spotlight>
-            <a href="Why-native.md" type="tools" summary="Why using native technology is better">Why Native</a>
+            <a href="Why-Duduk.md" type="tools" summary="Why using native technology is better">Why Duduk</a>
             <a href="Getting-Started.md" type="start" summary="Create your own application">Getting started</a>
         </spotlight>
 
         <primary>
             <title>Packages</title>
-            <a href="framework-components.md" type="container" summary="Build native web components">Components</a>
-            <a href="framework-server.md" type="cloud" summary="Create a web server">Server</a>
-            <a href="framework-localization.md" type="world" summary="Built-in support for multiple languages">Localization</a>
-            <a href="framework-content-negotiation.md" type="branch" summary="Serve different resources based on user decision">Content Negotiation</a>
+            <a href="duduk-components.md" type="container" summary="Build native web components">Components</a>
+            <a href="duduk-server.md" type="cloud" summary="Create a web server">Server</a>
+            <a href="duduk-localization.md" type="world" summary="Built-in support for multiple languages">Localization</a>
+            <a href="duduk-content-negotiation.md" type="branch" summary="Serve different resources based on user decision">Content Negotiation</a>
         </primary>
         
         <secondary>

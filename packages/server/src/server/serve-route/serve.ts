@@ -1,6 +1,6 @@
 import type {IncomingMessage, RequestListener} from "node:http";
 import type {RoutePart} from "./models";
-import {matchAcceptHeader} from "@framework/content-negotiation";
+import {matchAcceptHeader} from "@duduk/content-negotiation";
 import {getRoutes} from "./parseRoutes";
 import {printPage} from "./servePageEndpoint";
 import {executeServer} from "./serveServerEndpoint";

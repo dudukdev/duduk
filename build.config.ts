@@ -6,7 +6,7 @@ export default defineBuildConfig([
         entries: ['./index.ts'],
         declaration: 'node16',
         externals: [
-            /@framework\/.*/ug,
+            /@duduk\/.*/ug,
         ]
     },
     {
@@ -14,7 +14,7 @@ export default defineBuildConfig([
         entries: ['./index.ts'],
         declaration: 'node16',
         externals: [
-            /@framework\/.*/ug,
+            /@duduk\/.*/ug,
         ]
     },
     {
@@ -22,7 +22,7 @@ export default defineBuildConfig([
         entries: ['./index.ts'],
         declaration: 'node16',
         externals: [
-            /@framework\/.*/ug,
+            /@duduk\/.*/ug,
         ]
     },
     {
@@ -34,7 +34,7 @@ export default defineBuildConfig([
         ],
         declaration: 'node16',
         externals: [
-            /@framework\/.*/ug,
+            /@duduk\/.*/ug,
             'jsdom',
             'mime',
             'esbuild'

@@ -1,5 +1,5 @@
 import {data, type LocaleStrings} from "./data";
-import {matchLanguage} from "@framework/content-negotiation";
+import {matchLanguage} from "@duduk/content-negotiation";
 
 export function localeStrings(unicodeLocale: string | string[] | readonly string[]): LocaleStrings {
   if (data.locales.size === 0) {

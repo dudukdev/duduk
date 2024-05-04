@@ -1,5 +1,5 @@
 {
-  "name": "@framework/content-negotiation",
+  "name": "@duduk/content-negotiation",
   "version": "0.0.0",
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
