@@ -6,6 +6,9 @@ export default defineConfig({
       'default',
       ['junit', {outputFile: 'reports/junit.xml'}]
     ],
+    restoreMocks: true,
+    unstubEnvs: true,
+    unstubGlobals: true,
     coverage: {
       provider: 'v8',
       reporter: [
