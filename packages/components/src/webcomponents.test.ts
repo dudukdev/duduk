@@ -329,5 +329,88 @@ describe('helper methods', () => {
     })
   });
 
-  describe.todo('applyTemplate');
+  describe('applyTemplate', () => {
+    test('apply template 2 times', () => {
+      const Component = class extends WebComponent {
+        static template = html`<template data-ref="myRef">This is a template</template>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templates = component.applyTemplate('myRef', 2);
+      expect(templates).toHaveLength(2);
+      expect(templates[0].childNodes).toHaveLength(3);
+      expect(templates[0].childNodes[1].textContent).toEqual('This is a template');
+      expect(templates[1].childNodes).toHaveLength(3);
+      expect(templates[1].childNodes[1].textContent).toEqual('This is a template');
+      expect(component.shadowRoot?.innerHTML).toEqual('<template data-ref="myRef">This is a template</template><!--applyTemplate:myRef:start:0-->This is a template<!--applyTemplate:myRef:end:0--><!--applyTemplate:myRef:start:1-->This is a template<!--applyTemplate:myRef:end:1-->');
+    });
+
+    test('apply template 1 and then 2 times and do not recreate first elements', () => {
+      const Component = class extends WebComponent {
+        static template = html`<template data-ref="myRef">This is a template</template>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templatesFirst = component.applyTemplate('myRef', 1);
+      const templatesSecond = component.applyTemplate('myRef', 2);
+
+      expect(templatesFirst).toHaveLength(1);
+      expect(templatesSecond).toHaveLength(2);
+      expect(templatesFirst[0].childNodes[1]).toBe(templatesSecond[0].childNodes[1]);
+    });
+
+    test('apply template 2 and then 1 times and keep first elements', () => {
+      const Component = class extends WebComponent {
+        static template = html`<template data-ref="myRef">This is a template</template>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templatesFirst = component.applyTemplate('myRef', 2);
+      const templatesSecond = component.applyTemplate('myRef', 1);
+
+      expect(templatesFirst).toHaveLength(2);
+      expect(templatesSecond).toHaveLength(1);
+      expect(templatesFirst[0].childNodes[1]).toBe(templatesSecond[0].childNodes[1]);
+    });
+
+    test('getElement inside applied template', () => {
+      const Component = class extends WebComponent {
+        static template = html`<template data-ref="myRef">This is a <span data-ref="otherRef"></span> template</template>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templates = component.applyTemplate('myRef', 2);
+      templates[1].getElement('otherRef')!.textContent = 'nice';
+
+      expect(component.shadowRoot?.innerHTML).toEqual('<template data-ref="myRef">This is a <span data-ref="otherRef"></span> template</template><!--applyTemplate:myRef:start:0-->This is a <span data-ref="otherRef"></span> template<!--applyTemplate:myRef:end:0--><!--applyTemplate:myRef:start:1-->This is a <span data-ref="otherRef">nice</span> template<!--applyTemplate:myRef:end:1-->');
+    });
+
+    test('applyTemplate inside applied template', () => {
+      const Component = class extends WebComponent {
+        static template = html`<template data-ref="myRef">This is a <span><template data-ref="otherRef">nice</template></span> template</template>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templates = component.applyTemplate('myRef', 2);
+      templates[1].applyTemplate('otherRef', 1);
+
+      expect(component.shadowRoot?.innerHTML).toEqual('<template data-ref="myRef">This is a <span><template data-ref="otherRef">nice</template></span> template</template><!--applyTemplate:myRef:start:0-->This is a <span><template data-ref="otherRef">nice</template></span> template<!--applyTemplate:myRef:end:0--><!--applyTemplate:myRef:start:1-->This is a <span><template data-ref="otherRef">nice</template><!--applyTemplate:otherRef:start:0-->nice<!--applyTemplate:otherRef:end:0--></span> template<!--applyTemplate:myRef:end:1-->');
+    });
+
+    test('do nothing if data-ref is not a template', () => {
+      const Component = class extends WebComponent {
+        static template = html`<span data-ref="myRef">This is a template</span>`;
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+      const component = new Component();
+
+      const templates = component.applyTemplate('myRef', 2);
+      expect(templates).toHaveLength(0);
+    });
+  });
 });
