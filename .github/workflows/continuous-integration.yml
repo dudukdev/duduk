@@ -4,12 +4,19 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  pull-requests: write
+  contents: read
+  actions: read
+  checks: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ['20.x', '22.x']
+    name: 'Unit Tests ${{ matrix.node-version }}'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -19,9 +26,20 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npm run test
+      - name: 'Report Results'
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: 'Test Results ${{ matrix.node-version }}'
+          path: reports/junit.xml
+          reporter: jest-junit
+      - name: 'Report Coverage'
+        uses: davelosert/vitest-coverage-report-action@v2
+        if: always()
 
   build:
     runs-on: ubuntu-latest
+    name: 'Build'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}

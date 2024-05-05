@@ -14,8 +14,11 @@ export default defineConfig({
       reporter: [
         'text',
         'text-summary',
+        'json',
+        'json-summary',
         'cobertura'
-      ]
+      ],
+      reportOnFailure: true
     }
   },
 })
