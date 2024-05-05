@@ -10,7 +10,7 @@ export function parseHeader(header: string): HeaderEntry[] {
 
     for (const part of parts) {
         const elements = part.split(';').map(e => e.trim());
-        const value = elements.shift() ?? '';
+        const value = elements.shift()!;
         let weight = 1;
         const parameters: Record<string, string> = {};
         for (const element of elements) {
