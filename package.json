@@ -20,7 +20,7 @@
     "packages/server"
   ],
   "devDependencies": {
-    "@types/node": "^20.12.7",
+    "@types/node": "^20.12.8",
     "@vitest/coverage-v8": "^1.5.2",
     "typescript": "^5.4.5",
     "unbuild": "^2.0.0",
