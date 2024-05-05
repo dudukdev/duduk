@@ -7,7 +7,7 @@
     "dist"
   ],
   "bin": {
-    "bundle": "dist/bin/bundle.mjs"
+    "duduk": "dist/bin/index.mjs"
   },
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",

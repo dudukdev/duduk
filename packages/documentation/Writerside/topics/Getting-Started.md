@@ -30,8 +30,10 @@ Follow these steps to create the necessary project structure.
       <code-block lang="json" noinject="true">
          "type": "module",
          "scripts": {
-            "build:watch": "bundle",
-            "serve": "node --experimental-vm-modules --watch-path=./dist dist"
+            "build": "duduk build",
+            "build:watch": "duduk build --watch",
+            "serve": "node --experimental-vm-modules dist",
+            "serve:watch": "node --experimental-vm-modules --watch-path=./dist dist"
          }
       </code-block>
    </step>
