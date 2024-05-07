@@ -2,11 +2,24 @@
 <buildprofiles xsi:noNamespaceSchemaLocation="https://resources.jetbrains.com/writerside/1.0/build-profiles.xsd"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <variables></variables>
+    <variables>
+        <custom-favicons>logo.svg</custom-favicons>
+        <header-logo>logo.svg</header-logo>
+
+        <download-page>https://github.com/dudukdev/duduk</download-page>
+        <download-title>GitHub</download-title>
+        <showDownloadButton>true</showDownloadButton>
+
+    </variables>
+
     <build-profile instance="in">
         <variables>
             <noindex-content>true</noindex-content>
         </variables>
+
+        <footer>
+            <copyright>2024-present Veit Kunz</copyright>
+        </footer>
     </build-profile>
 
 </buildprofiles>
