@@ -2,12 +2,12 @@ import {data} from "./data";
 
 export function loadLocaleClient(): void {
   if (window.__app?.locales !== undefined) {
-    data.strings = {};
-    data.locales = new Set();
-    data.defaultLocale = undefined;
-
-    data.strings['compiled'] = window.__app.locales;
+    data.strings = {
+      compiled: window.__app.locales
+    };
+    data.locales.clear();
     data.locales.add('compiled');
+    data.defaultLocale = 'compiled';
   }
 }
 

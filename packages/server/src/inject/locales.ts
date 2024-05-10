@@ -1,6 +1,7 @@
 import type {LocaleStrings} from "@duduk/localization";
 import {localeStrings} from "@duduk/localization";
+import type {AcceptLocale} from "@duduk/localization/src/data";
 
-export function getLocaleStrings(locale: string | string[] | readonly string[]): LocaleStrings {
-    return localeStrings(locale);
+export function getLocaleStrings(locale: AcceptLocale): LocaleStrings {
+    return localeStrings(locale).strings;
 }

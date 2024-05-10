@@ -1,6 +1,7 @@
 import {parseHeader} from "./parse";
+import type {AcceptLocale} from "@duduk/localization/src/data";
 
-export function matchLanguage(languages: string | string[] | readonly string[], availableLocales: string[]): string | undefined {
+export function matchLanguage(languages: AcceptLocale, availableLocales: string[]): string | undefined {
     if (typeof languages === 'string') {
         const entries = parseHeader(languages);
         languages = entries.map(e => e.value);
