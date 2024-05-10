@@ -4,7 +4,7 @@ declare global {
     }
 }
 
-export type {LocaleStrings} from './src/data';
+export type {LocaleStrings, AcceptLocale} from './src/data';
 export {loadLocale, loadLocaleClient} from './src/loadLocales';
 export {injectI18n} from './src/inject';
 export {t} from './src/translate';

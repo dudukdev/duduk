@@ -1,5 +1,5 @@
+import type {AcceptLocale} from "@duduk/localization";
 import {parseHeader} from "./parse";
-import type {AcceptLocale} from "@duduk/localization/src/data";
 
 export function matchLanguage(languages: AcceptLocale, availableLocales: string[]): string | undefined {
     if (typeof languages === 'string') {
