@@ -1,7 +1,7 @@
+import type {BuildOptions} from "esbuild";
 import * as esbuild from 'esbuild';
 import fs from "node:fs";
 import path from "node:path";
-import type {BuildOptions} from "esbuild";
 
 export async function build(watch: boolean): Promise<void> {
   fs.rmSync('dist', {recursive: true, force: true});
@@ -11,14 +11,18 @@ export async function build(watch: boolean): Promise<void> {
 
   const readFolder = (folder: string) => {
     const items = fs.readdirSync(folder);
+    [
+      'layout',
+      'layoutServer',
+      'page',
+      'pageServer'
+    ].forEach(file => {
+      addJsOrTs(entryPoints, path.join(folder, file));
+    });
     for (const itemName of items) {
       const itemPath = path.join(folder, itemName);
       const item = fs.lstatSync(itemPath);
-      if (item.isFile()) {
-        if (['page.ts', 'pageServer.ts', 'layout.ts', 'layoutServer.ts'].includes(itemName)) {
-          entryPoints.push(itemPath);
-        }
-      } else if (item.isDirectory()) {
+      if (item.isDirectory()) {
         readFolder(itemPath);
       }
     }
@@ -28,14 +32,14 @@ export async function build(watch: boolean): Promise<void> {
 
   [
     'src/app.css',
-    'src/root.css',
-    'src/setupServer.ts',
-    'src/setupClient.ts'
+    'src/root.css'
   ].forEach(file => {
     if (fs.existsSync(file)) {
       entryPoints.push(file);
     }
   });
+  addJsOrTs(entryPoints, 'src/setupServer');
+  addJsOrTs(entryPoints, 'src/setupClient');
 
   entryPoints.push('inject/locales.mjs');
 
@@ -81,4 +85,12 @@ export async function build(watch: boolean): Promise<void> {
     await esbuild.build(serverBuildOptions);
   }
 
+}
+
+function addJsOrTs(entryPoints: string[], filePath: string): void {
+  if (fs.existsSync(`${filePath}.js`)) {
+    entryPoints.push(`${filePath}.js`);
+  } else if (fs.existsSync(`${filePath}.ts`)) {
+    entryPoints.push(`${filePath}.ts`);
+  }
 }

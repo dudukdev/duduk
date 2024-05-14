@@ -1,5 +1,9 @@
-import {expect, test, vi} from "vitest";
+import {afterEach, expect, test, vi} from "vitest";
 import {defaultLanguages} from "./defaultLanguage";
+
+afterEach(() => {
+  vi.unstubAllGlobals;
+});
 
 test('return navigator.languages if defined', () => {
   vi.stubGlobal('navigator', {languages: ['de-DE', 'en-US']});

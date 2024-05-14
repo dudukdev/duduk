@@ -5,4 +5,4 @@ declare global {
 }
 
 export type {PageServerDataFunction, PageServerHttpFunction, LayoutServerDataFunction, LayoutServerHttpFunction} from './src/server/serve-route/models';
-export {getData, getParams} from './src/getter';
+export {getData, getParams} from './src/client/getter';

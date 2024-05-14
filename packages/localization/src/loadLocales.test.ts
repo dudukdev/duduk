@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, test, vi} from "vitest";
+import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 import {data} from "./data";
 import {loadLocale, loadLocaleClient} from "./loadLocales";
 
@@ -9,6 +9,10 @@ beforeEach(() => {
   vi.stubGlobal('window', {
     __app: undefined
   })
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals;
 });
 
 describe('loadLocaleClient()', () => {
