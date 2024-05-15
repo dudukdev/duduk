@@ -1,0 +1,3 @@
+# Global Communication
+
+Start typing here...
