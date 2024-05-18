@@ -17,6 +17,7 @@
     "packages/content-negotiation",
     "packages/documentation",
     "packages/localization",
+    "packages/messaging",
     "packages/server"
   ],
   "devDependencies": {

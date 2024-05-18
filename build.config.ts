@@ -29,6 +29,15 @@ export default defineBuildConfig([
     ]
   },
   {
+    name: '@duduk/messaging',
+    rootDir: './packages/messaging',
+    entries: ['./index.ts'],
+    declaration: 'node16',
+    externals: [
+      /@duduk\/.*/ug,
+    ]
+  },
+  {
     name: '@duduk/server client components',
     rootDir: './packages/server',
     entries: [

@@ -23,5 +23,6 @@
     </toc-element>
     <toc-element topic="duduk-server.md"/>
     <toc-element topic="duduk-localization.md"/>
+    <toc-element topic="duduk-messaging.md"/>
     <toc-element topic="duduk-content-negotiation.md"/>
 </instance-profile>
