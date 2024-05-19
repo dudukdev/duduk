@@ -1,6 +1,6 @@
 import {type RequestListener, createServer} from "node:http";
-import {serveRoute} from "./serve-route/serve";
-import {serveFile} from "./serveFile";
+import {serveRoute} from "./serve-route/serveRoute";
+import {serveFile} from "./serve-file/serveFile";
 
 const requestListener: RequestListener = async function (req, res) {
   const fileServed = serveFile(req, res);

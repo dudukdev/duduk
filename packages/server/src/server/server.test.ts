@@ -1,15 +1,15 @@
 import {afterEach, beforeEach, expect, test, vi} from "vitest";
 import {createServer} from "node:http";
-import {serveFile} from "./serveFile";
-import {serveRoute} from "./serve-route/serve";
+import {serveFile} from "./serve-file/serveFile";
+import {serveRoute} from "./serve-route/serveRoute";
 
 vi.mock('node:http', () => ({
   createServer: vi.fn()
 }));
-vi.mock('./serve-route/serve', () => ({
+vi.mock('./serve-route/serveRoute', () => ({
   serveRoute: vi.fn()
 }));
-vi.mock('./serveFile', () => ({
+vi.mock('./serve-file/serveFile', () => ({
   serveFile: vi.fn()
 }));
 
@@ -39,7 +39,7 @@ test('create server with default values', async () => {
     log: vi.fn()
   });
 
-  await import('./index');
+  await import('./server');
 
   expect(createServer).toHaveBeenCalledOnce();
   expect(createServer).toHaveBeenCalledWith(expect.any(Function));
@@ -59,7 +59,7 @@ test('create server with env values', async () => {
   process.env.HOST = 'someHost';
   process.env.PORT = '4242';
 
-  await import('./index');
+  await import('./server');
 
   expect(createServer).toHaveBeenCalledOnce();
   expect(createServer).toHaveBeenCalledWith(expect.any(Function));
@@ -83,7 +83,7 @@ test('only serve file if serveFile returns true', async () => {
     end: vi.fn()
   };
 
-  await import('./index');
+  await import('./server');
 
   const listener = vi.mocked(createServer).mock.lastCall![0] as Function;
   await listener(mockRequest, mockResponse);
@@ -107,7 +107,7 @@ test('serve route if serveFile returns false and serveRoute returns true', async
     end: vi.fn()
   };
 
-  await import('./index');
+  await import('./server');
 
   const listener = vi.mocked(createServer).mock.lastCall![0] as Function;
   await listener(mockRequest, mockResponse);
@@ -132,7 +132,7 @@ test('write 404 if serveFile and serveRoute return false', async () => {
     end: vi.fn()
   };
 
-  await import('./index');
+  await import('./server');
 
   const listener = vi.mocked(createServer).mock.lastCall![0] as Function;
   await listener(mockRequest, mockResponse);

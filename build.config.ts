@@ -56,7 +56,7 @@ export default defineBuildConfig([
     name: '@duduk/server server components',
     rootDir: './packages/server',
     entries: [
-      './src/server/index.ts',
+      './src/server/server.ts',
       './src/bin/index.ts'
     ],
     rollup: {esbuild: {target: 'ESNext'}},
