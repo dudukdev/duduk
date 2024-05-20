@@ -15,7 +15,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "esbuild": "^0.21.2",
+    "esbuild": "^0.21.3",
     "jsdom": "^24.0.0",
     "mime": "^4.0.3"
   },
