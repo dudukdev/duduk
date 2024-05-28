@@ -1,9 +1,9 @@
 import {data} from "./data";
 
 export function loadLocaleClient(): void {
-  if (window.__app?.locales !== undefined) {
+  if (window.__duduk?.locales !== undefined) {
     data.strings = {
-      compiled: window.__app.locales
+      compiled: window.__duduk.locales
     };
     data.locales.clear();
     data.locales.add('compiled');

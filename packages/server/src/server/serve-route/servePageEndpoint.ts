@@ -91,7 +91,7 @@ async function render(req: IncomingMessage, res: Parameters<RequestListener>[1],
 <body>
     ${serverSideRenderedHtml}
     <script type="module">
-        window.__app = ${JSON.stringify(globals)};
+        window.__duduk = ${JSON.stringify(globals)};
     </script>
     <script type="module">
         ${imports.join('')}

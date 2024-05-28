@@ -7,7 +7,7 @@ beforeEach(() => {
   data.locales.clear();
   data.defaultLocale = undefined;
   vi.stubGlobal('window', {
-    __app: undefined
+    __duduk: undefined
   })
 });
 
@@ -16,8 +16,8 @@ afterEach(() => {
 });
 
 describe('loadLocaleClient()', () => {
-  test('set locales from __app', () => {
-    window.__app = {locales: {id1: 'text', id2: 'other'}};
+  test('set locales from __duduk', () => {
+    window.__duduk = {locales: {id1: 'text', id2: 'other'}};
 
     loadLocaleClient();
 
@@ -27,7 +27,7 @@ describe('loadLocaleClient()', () => {
   });
 
   test('replace pre-existing locales', () => {
-    window.__app = {locales: {id1: 'text', id2: 'other'}};
+    window.__duduk = {locales: {id1: 'text', id2: 'other'}};
     data.strings = {de: {foo: 'bar'}};
     data.locales.add('de');
     data.defaultLocale = 'de';
@@ -39,8 +39,8 @@ describe('loadLocaleClient()', () => {
     expect(data.defaultLocale).toEqual('compiled');
   });
 
-  test('do not change pre-existing locales if __app.locales undefined', () => {
-    window.__app = {locales: undefined};
+  test('do not change pre-existing locales if __duduk.locales undefined', () => {
+    window.__duduk = {locales: undefined};
     data.strings = {de: {foo: 'bar'}};
     data.locales.add('de');
     data.defaultLocale = 'de';
@@ -52,8 +52,8 @@ describe('loadLocaleClient()', () => {
     expect(data.defaultLocale).toEqual('de');
   });
 
-  test('do not change pre-existing locales if __app undefined', () => {
-    window.__app = undefined;
+  test('do not change pre-existing locales if __duduk undefined', () => {
+    window.__duduk = undefined;
     data.strings = {de: {foo: 'bar'}};
     data.locales.add('de');
     data.defaultLocale = 'de';

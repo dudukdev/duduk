@@ -4,8 +4,8 @@ export function css(strings: TemplateStringsArray, ...values: any[]): HTMLStyleE
     result += values[i - 1] + strings[i];
   }
   const styleElement = document.createElement('style');
-  if (window.__app !== undefined && 'prependStyles' in window.__app) {
-    result = `${window.__app.prependStyles}\n${result}`;
+  if (window.__duduk !== undefined && 'prependStyles' in window.__duduk) {
+    result = `${window.__duduk.prependStyles}\n${result}`;
   }
   styleElement.append(result);
   return styleElement;

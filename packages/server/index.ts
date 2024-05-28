@@ -1,6 +1,6 @@
 declare global {
   interface Window {
-    __app?: Record<string, any>
+    __duduk?: Record<string, any>
   }
 }
 

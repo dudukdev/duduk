@@ -29,7 +29,7 @@ export default class extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
-    this.shadowRoot.innerHTML = \`\${something}<slot></slot><p>lang \${JSON.stringify(window.navigator.languages)}</p><p>__app \${JSON.stringify(window.__app)}</p><p>url \${window.location.href}</p>\`;
+    this.shadowRoot.innerHTML = \`\${something}<slot></slot><p>lang \${JSON.stringify(window.navigator.languages)}</p><p>__duduk \${JSON.stringify(window.__duduk)}</p><p>url \${window.location.href}</p>\`;
   }
 }
 `;
@@ -69,7 +69,7 @@ test('render HTML', async () => {
 
   const result = await ssr(mockHtml, mockJs, mockGlobals, mockLanguages, mockUrl);
 
-  expect(result).toEqual(`<my-component><template shadowrootmode="open">imported content<p>Some outer component content</p><slot></slot></template><my-other-component><template shadowrootmode="open">imported content<slot></slot><p>lang ["de-DE","en-US"]</p><p>__app {"some":"global"}</p><p>url http://localhost/someRoute</p></template>Some inner content</my-other-component></my-component>
+  expect(result).toEqual(`<my-component><template shadowrootmode="open">imported content<p>Some outer component content</p><slot></slot></template><my-other-component><template shadowrootmode="open">imported content<slot></slot><p>lang ["de-DE","en-US"]</p><p>__duduk {"some":"global"}</p><p>url http://localhost/someRoute</p></template>Some inner content</my-other-component></my-component>
 <my-component-without-show-root><template>some template</template></my-component-without-show-root>
 <my-component-without-show-root><template shadowrootmode="open">shadow content</template></my-component-without-show-root>
 <my-component-without-show-root></my-component-without-show-root>

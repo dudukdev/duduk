@@ -10,7 +10,7 @@ export async function ssr(html: string, js: string, globals: Record<string, any>
   const jsdom = new JSDOM(html, {
     url,
     beforeParse(window) {
-      window.__app = globals;
+      window.__duduk = globals;
       // @ts-ignore
       window.fetch = () => ({then: () => {}, catch: () => {}});
       Object.defineProperty(window.navigator, 'languages', {value: languages});

@@ -57,7 +57,7 @@ test('serve rendered html root route without layout', async () => {
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{}};
+        window.__duduk = {"pageData":{},"pageParams":{}};
     </script>
     <script type="module">
         import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -103,7 +103,7 @@ test('serve rendered html root route with layout', async () => {
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{}};
+        window.__duduk = {"pageData":{},"pageParams":{}};
     </script>
     <script type="module">
         import Layoutftzzt967gi67 from "/__app/routes/layout-hd6e.js";import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -151,7 +151,7 @@ test('serve rendered html root route with layout data', async () => {
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{"some":"layoutData"},"pageParams":{}};
+        window.__duduk = {"pageData":{"some":"layoutData"},"pageParams":{}};
     </script>
     <script type="module">
         import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -199,7 +199,7 @@ test('serve rendered html root route with page data', async () => {
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{"some":"pageData"},"pageParams":{}};
+        window.__duduk = {"pageData":{"some":"pageData"},"pageParams":{}};
     </script>
     <script type="module">
         import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -266,7 +266,7 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{"some":"subPageData","other":"data from layout","more":"from sub layout","else":"something from sub page"},"pageParams":{}};
+        window.__duduk = {"pageData":{"some":"subPageData","other":"data from layout","more":"from sub layout","else":"something from sub page"},"pageParams":{}};
     </script>
     <script type="module">
         import Layoutftzzt967gi67 from "/__app/routes/layout-hd6e.js";import Layoutlhuo8z7it6ug from "/__app/routes/layout-63re.js";import Pagep7t86fuziuhs from "/__app/routes/page-u97z.js";
@@ -333,7 +333,7 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{"some":"subPageData","other":"data from layout","more":"from sub layout","else":"something from sub page"},"pageParams":{"paramRoute":"someThing"}};
+        window.__duduk = {"pageData":{"some":"subPageData","other":"data from layout","more":"from sub layout","else":"something from sub page"},"pageParams":{"paramRoute":"someThing"}};
     </script>
     <script type="module">
         import Layoutftzzt967gi67 from "/__app/routes/layout-hd6e.js";import Layoutlhuo8z7it6ug from "/__app/routes/layout-63re.js";import Pagep7t86fuziuhs from "/__app/routes/page-u97z.js";
@@ -414,7 +414,7 @@ test('serve rendered html route with root files', async () => {
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
+        window.__duduk = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
     </script>
     <script type="module">
         import "some setup client path";import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -483,7 +483,7 @@ test('serve rendered html route with root files with accept-language with origin
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
+        window.__duduk = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
     </script>
     <script type="module">
         import "some setup client path";import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -551,7 +551,7 @@ test('serve rendered html route with root files with host without referer or ori
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
+        window.__duduk = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
     </script>
     <script type="module">
         import "some setup client path";import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";
@@ -617,7 +617,7 @@ test('serve rendered html route with root files without referer or origin or hos
 <body>
     server-side rendered html
     <script type="module">
-        window.__app = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
+        window.__duduk = {"pageData":{},"pageParams":{},"prependStyles":"@import url(\\"some app CSS path\\");","locales":{"some":"string"}};
     </script>
     <script type="module">
         import "some setup client path";import Pagekvzo789t6i7f from "/__app/routes/page-asdf.js";

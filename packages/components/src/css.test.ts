@@ -33,7 +33,7 @@ test("return correct styles if it contains variables", async () => {
 });
 
 test("return correct styles if 'prependStyles' is set", async () => {
-  window.__app = {
+  window.__duduk = {
     prependStyles: '.prependStyles {font-size: 1em}'
   }
 
