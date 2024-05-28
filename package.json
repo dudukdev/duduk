@@ -6,7 +6,7 @@
   "scripts": {
     "build": "unbuild",
     "check": "tsc --noEmit",
-    "test": "vitest run --coverage",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' vitest run --coverage",
     "test:watch": "vitest"
   },
   "engines": {

@@ -18,7 +18,11 @@ export default defineConfig({
         'json-summary',
         'cobertura'
       ],
-      reportOnFailure: true
+      reportOnFailure: true,
+      exclude: [
+        'vitest.workspace.ts',
+        'packages/server/src/server/serve-route/__app/**'
+      ]
     }
   },
-})
+});

@@ -15,12 +15,7 @@ export async function executeServer(req: IncomingMessage, res: Parameters<Reques
   }
 
   const lastPart = stack[stack.length - 1];
-  const httpHandler = lastPart.pageServer?.[method];
-  if (httpHandler === undefined) {
-    res.writeHead(500);
-    res.end('500 Internal Server Error');
-    return;
-  }
+  const httpHandler = lastPart.pageServer![method]!;
 
   await httpHandler({request: req, response: res, data: cumulatedData, params});
 }

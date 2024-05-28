@@ -64,7 +64,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
 
 function getStack(pathParts: string[], part: RoutePart, stack: RoutePart[], params: Record<string, string>): { stack: RoutePart[]; params: Record<string, string> } | undefined {
   if (pathParts.length > 0) {
-    const nextPathPart = pathParts.shift() ?? '';
+    const nextPathPart = pathParts.shift()!;
     const nextRoutePart = part.routes.get(nextPathPart) ?? part.paramRoute;
     if (nextRoutePart === undefined) {
       return undefined;

@@ -33,7 +33,6 @@ export async function ssr(html: string, js: string, globals: Record<string, any>
   return jsdom.window.document.body.innerHTML;
 }
 
-const fileCache = new Map<string, string>();
 const moduleCache = new Map<string, vm.SourceTextModule>();
 
 function getLinker(basePath: string): vm.ModuleLinker {
@@ -47,19 +46,15 @@ function getLinker(basePath: string): vm.ModuleLinker {
       return moduleCache.get(specifier)!;
     }
 
-    let fileContent = '';
-    if (fileCache.has(specifier)) {
-      fileContent = fileCache.get(specifier) ?? '';
-    } else {
-      fileContent = fs.readFileSync(specifier, {encoding: 'utf-8'});
-      fileCache.set(specifier, fileContent);
-    }
-
+    const fileContent = fs.readFileSync(specifier, {encoding: 'utf-8'});
     const sourceTextModule = new vm.SourceTextModule(fileContent, {
       context: referencingModule.context,
       identifier: specifier
     });
+
+    // Do no async operations before setting the moduleCache
     moduleCache.set(specifier, sourceTextModule);
+
     await sourceTextModule.link(getLinker(path.dirname(specifier)));
     return sourceTextModule;
   };
@@ -69,7 +64,14 @@ function createDeclarativeShadowDom(jsdom: JSDOM, domPart: Document | ShadowRoot
   for (const child of domPart.children) {
     createDeclarativeShadowDom(jsdom, child, customElementsTagNames);
     if (customElementsTagNames.includes(child.tagName.toUpperCase())) {
-      if (child.shadowRoot !== null && ![...child.children].some((child: Element) => child.tagName === 'TEMPLATE' && child.hasAttribute('shadowrootmode'))) {
+      if (
+        child.shadowRoot !== null &&
+        ![...child.children]
+          .some(
+            (child: Element) =>
+              child.tagName === 'TEMPLATE' &&
+              child.hasAttribute('shadowrootmode'))
+      ) {
         createDeclarativeShadowDom(jsdom, child.shadowRoot, customElementsTagNames);
 
         const template = jsdom.window.document.createElement('template');
