@@ -134,3 +134,6 @@ dist
 .DS_Store
 reports/
 coverage/
+
+# stryker temp files
+.stryker-tmp/

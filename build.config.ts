@@ -8,7 +8,8 @@ export default defineBuildConfig([
     declaration: 'node16',
     externals: [
       /@duduk\/.*/ug,
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
     name: '@duduk/content-negotiation',
@@ -17,7 +18,8 @@ export default defineBuildConfig([
     declaration: 'node16',
     externals: [
       /@duduk\/.*/ug,
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
     name: '@duduk/localization',
@@ -26,7 +28,8 @@ export default defineBuildConfig([
     declaration: 'node16',
     externals: [
       /@duduk\/.*/ug,
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
     name: '@duduk/messaging',
@@ -35,7 +38,8 @@ export default defineBuildConfig([
     declaration: 'node16',
     externals: [
       /@duduk\/.*/ug,
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
     name: '@duduk/server client components',
@@ -50,7 +54,8 @@ export default defineBuildConfig([
       'jsdom',
       'mime',
       'esbuild'
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
     name: '@duduk/server server components',
@@ -65,6 +70,7 @@ export default defineBuildConfig([
       'jsdom',
       'mime',
       'esbuild'
-    ]
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
   }
 ]);

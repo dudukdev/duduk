@@ -6,8 +6,9 @@
   "scripts": {
     "build": "unbuild",
     "check": "tsc --noEmit",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' vitest run --coverage",
-    "test:watch": "vitest"
+    "test:unit": "NODE_OPTIONS='--experimental-vm-modules' vitest run --coverage",
+    "test:unit:watch": "vitest",
+    "test:stryker": "NODE_OPTIONS='--experimental-vm-modules' NODE_ENV=test stryker run"
   },
   "engines": {
     "node": ">=20"
@@ -21,6 +22,8 @@
     "packages/server"
   ],
   "devDependencies": {
+    "@stryker-mutator/core": "^8.2.6",
+    "@stryker-mutator/vitest-runner": "^8.2.6",
     "@types/node": "^20.12.12",
     "@vitest/coverage-v8": "^1.6.0",
     "typescript": "^5.4.5",
