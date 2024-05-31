@@ -1,3 +1,0 @@
-# Data Bindings
-
-Start typing here...

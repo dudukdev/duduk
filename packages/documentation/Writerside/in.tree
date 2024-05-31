@@ -16,9 +16,8 @@
             <toc-element topic="Styles.md"/>
             <toc-element topic="Properties.md"/>
         </toc-element>
-        <toc-element topic="Data-Bindings.md"/>
+        <toc-element topic="data-exchange.md"/>
         <toc-element topic="Styling.md"/>
-        <toc-element topic="Global-Communication.md"/>
         <toc-element topic="Dynamic-Component-Creation.md"/>
     </toc-element>
     <toc-element topic="duduk-server.md"/>

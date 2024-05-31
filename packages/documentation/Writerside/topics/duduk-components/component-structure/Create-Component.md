@@ -5,7 +5,7 @@
 
 > It is best practice to create individual files for each component.
 > 
-{style="note"}
+{style="tip"}
 
 Basically, this library is just an extension to native web components. Native web components are sometimes cumbersome to use. Therefore this library creates an abstraction layer above the native web component APIs.
 
