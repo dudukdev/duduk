@@ -13,15 +13,16 @@ export class DudukMessenger {
   }
 
   #dispatch(channelName: string, value: any, callback: DispatchCallbackFn<any> | undefined): void {
-    void (async () => {
+    // Use task queue, not microtask queue
+    setTimeout(async () => {
       const listeners = this.#channelListeners.get(channelName) ?? [];
       for (const listener of listeners) {
-        const [result] = await Promise.all([listener(value)]);
+        const result = await listener(value);
         if (result !== undefined && callback !== undefined) {
-          await Promise.all([callback(result)]);
+          setTimeout(() => callback(result), 0);
         }
       }
-    })();
+    }, 0);
   }
 
   #addListener(channelName: string, listener: ChannelListenerFn<any, any>): void {
