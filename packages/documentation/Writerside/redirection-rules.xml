@@ -6,8 +6,4 @@
         <accepts>page.html</accepts>
     </rule>
     -->
-    <rule id="7c4605c1">
-        <description>Created after removal of "Global Communication" from Duduk</description>
-        <accepts>Global-Communication.html</accepts>
-    </rule>
 </rules>
