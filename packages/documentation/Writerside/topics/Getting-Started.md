@@ -2,7 +2,7 @@
 
 ## Before you start
 
-Before you can create an application with Duduk, you need to make sure that you have installed at least version 20.0.0 of Node.js. You can check your installed version of Node.js with the following command.
+Before you can create an application with Duduk, you need to make sure that you have installed at least version 20.0.0 of Node.js. You can check your installed version of Node.js with the following command. Other runtimes then Node.js are not supported, currently. See [JavaScript Server Runtimes](js-server-runtime.md) for details on this.
 
 ```bash
 node --version

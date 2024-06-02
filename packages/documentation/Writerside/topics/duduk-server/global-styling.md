@@ -1,3 +1,3 @@
-# Server
+# Global Styling
 
 Start typing here...
