@@ -12,8 +12,8 @@
         </description>
 
         <spotlight>
-            <a href="Why-Duduk.md" type="tools" summary="Why using native technology is better">Why Duduk</a>
-            <a href="Getting-Started.md" type="install" summary="Create your own application">Getting started</a>
+            <a href="introduction.md" type="navigation" summary="What is Duduk">Introduction</a>
+            <a href="getting-started.md" type="start" summary="Create your own application">Getting started</a>
         </spotlight>
 
         <primary>
@@ -26,8 +26,8 @@
         </primary>
         
         <secondary>
-            <title>Other</title>
-            <a href="">Other</a>
+            <title>More</title>
+            <a href="js-server-runtime.md">JavaScript Runtimes</a>
             <a href="">Other</a>
         </secondary>
     </section-starting-page>

@@ -1,3 +1,0 @@
-# Why Duduk
-
-Start typing here...

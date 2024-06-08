@@ -1,13 +1,13 @@
 # Component Structure
 
 [Create Component](Create-Component.md)
-: Create components based on native web components.
+: Create components based on native web components
 
 [Template](Template.md)
-: This is the definition of the second term.
+: Define HTML of the component
 
 [Styles](Styles.md)
-: This is the definition of the second term.
+: Set styles for your component
 
 [Properties](Properties.md)
-: This is the definition of the second term.
+: Inject data into components

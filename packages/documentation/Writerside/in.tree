@@ -7,8 +7,8 @@
                  start-page="home.topic">
 
     <toc-element topic="home.topic"/>
-    <toc-element topic="Why-Duduk.md"/>
-    <toc-element topic="Getting-Started.md"/>
+    <toc-element topic="introduction.md"/>
+    <toc-element topic="getting-started.md"/>
     <toc-element topic="duduk-components.md">
         <toc-element topic="Component-Structure.md">
             <toc-element topic="Create-Component.md"/>

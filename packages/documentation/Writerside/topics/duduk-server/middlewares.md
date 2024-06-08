@@ -1,3 +1,3 @@
 # Middlewares
 
-Start typing here...
+Middlewares are not yet implemented.

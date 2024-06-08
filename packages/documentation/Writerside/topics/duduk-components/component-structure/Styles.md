@@ -1,5 +1,7 @@
 # Styles
 
+<show-structure for="chapter,procedure" depth="2"/>
+
 The `styles` block contains normal CSS. The styles are added to the Shadow DOM of the component. There the styles are encapsulated from the rest of the page, and the styles from the rest of the page are mostly encapsulated from the component.
 
 ```javascript
@@ -21,3 +23,7 @@ CSS properties, that are inheritable, can leak into components, as well as CSS c
     ]]>
     </code-block>
 </procedure>
+
+## Global styles
+
+If you use Duduk Server and need styles that are applied to all your components, see [Global Styling](global-styling.md) for more information.
