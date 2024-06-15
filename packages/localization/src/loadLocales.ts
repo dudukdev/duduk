@@ -12,6 +12,10 @@ export function loadLocaleClient(): void {
 }
 
 export function loadLocale(locale: string, localeStrings: object): void {
+  if (reservedPropertyName(data.strings, locale)) {
+    return;
+  }
+
   data.strings[locale] ??= {};
   data.locales.add(locale);
   if (data.defaultLocale === undefined) {
@@ -31,4 +35,9 @@ export function loadLocale(locale: string, localeStrings: object): void {
     }
   }
   walker([], localeStrings);
+}
+
+function reservedPropertyName(obj: object, prop: string): boolean {
+  const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
+  return propertyNames.includes(prop);
 }

@@ -135,4 +135,28 @@ describe('loadLocale()', () => {
     expect([...data.locales.values()]).toEqual(['de']);
     expect(data.defaultLocale).toEqual('de');
   });
+
+  describe('do nothing if locale is reserved property name', () => {
+    test.each([
+        'constructor',
+        '__defineGetter__',
+        '__defineSetter__',
+        'hasOwnProperty',
+        '__lookupGetter__',
+        '__lookupSetter__',
+        'isPrototypeOf',
+        'propertyIsEnumerable',
+        'toString',
+        'valueOf',
+        '__proto__',
+        'toLocaleString'
+      ]
+    )('%s', (propName) => {
+      loadLocale(propName, {foo: 'bar', some: 'thing'});
+
+      expect(data.strings).toEqual({});
+      expect([...data.locales.values()]).toEqual([]);
+      expect(data.defaultLocale).toBeUndefined();
+    });
+  });
 });
