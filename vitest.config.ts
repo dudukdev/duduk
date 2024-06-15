@@ -21,6 +21,7 @@ export default defineConfig({
       reportOnFailure: true,
       exclude: [
         'vitest.workspace.ts',
+        'stryker.config.js',
         'packages/server/src/server/serve-route/__app/**'
       ]
     }

@@ -62,7 +62,7 @@ export async function build(watch: boolean): Promise<void> {
     sourcemap: 'linked'
   };
   const serverBuildOptions: BuildOptions = {
-    entryPoints: ['node_modules/@duduk/server/dist/server/index.mjs'],
+    entryPoints: [{in: 'node_modules/@duduk/server/dist/server/server.mjs', out: 'index'}],
     outdir: 'dist',
     bundle: true,
     platform: 'node',

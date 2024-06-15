@@ -127,7 +127,7 @@ test('call build with files', async () => {
     sourcemap: 'linked',
   });
   expect(esbuild.build).toHaveBeenCalledWith({
-    entryPoints: ['node_modules/@duduk/server/dist/server/index.mjs'],
+    entryPoints: [{in: 'node_modules/@duduk/server/dist/server/server.mjs', out: 'index'}],
     outdir: 'dist',
     bundle: true,
     platform: 'node',
@@ -191,7 +191,7 @@ test('call watch with files', async () => {
     sourcemap: 'linked',
   });
   expect(esbuild.context).toHaveBeenCalledWith({
-    entryPoints: ['node_modules/@duduk/server/dist/server/index.mjs'],
+    entryPoints: [{in: 'node_modules/@duduk/server/dist/server/server.mjs', out: 'index'}],
     outdir: 'dist',
     bundle: true,
     platform: 'node',
