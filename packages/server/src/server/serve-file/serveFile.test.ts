@@ -144,6 +144,37 @@ test('return false and set nothing if path not exists', () => {
   expect(result).toBeFalsy();
 });
 
+test('return false and set nothing if path is outside base dir', () => {
+  vi.mocked(fs.existsSync).mockReturnValue(true);
+  vi.mocked(mockStat.isFile).mockReturnValue(true);
+  const mockReadStream = {
+    pipe: vi.fn()
+  };
+  // @ts-ignore
+  vi.mocked(fs.createReadStream).mockReturnValue(mockReadStream);
+  vi.mocked(mime.getType).mockReturnValue('my/mime');
+
+  const mockRequest = {
+    url: '/../some/file.js',
+    method: 'GET'
+  };
+  const mockResponse = {
+    writeHead: vi.fn(),
+    end: vi.fn()
+  };
+
+  // @ts-ignore
+  const result = serveFile(mockRequest, mockResponse);
+
+  expect(fs.existsSync).not.toHaveBeenCalled();
+  expect(fs.statSync).not.toHaveBeenCalled();
+  expect(mockStat.isFile).not.toHaveBeenCalled();
+  expect(mockResponse.writeHead).not.toHaveBeenCalled();
+  expect(mockResponse.end).not.toHaveBeenCalled();
+  expect(fs.createReadStream).not.toHaveBeenCalled();
+  expect(result).toBeFalsy();
+});
+
 test('return false and set nothing if path is not a file', () => {
   vi.mocked(fs.existsSync).mockReturnValue(true);
   vi.mocked(mockStat.isFile).mockReturnValue(false);

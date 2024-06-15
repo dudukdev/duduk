@@ -1,11 +1,12 @@
 import type {RequestListener} from "node:http";
 import fs from "node:fs";
 import mime from "mime";
+import path from "node:path";
 
 export function serveFile(req: Parameters<RequestListener>[0], res: Parameters<RequestListener>[1]): boolean {
-  const file = `${import.meta.dirname}${req.url}`;
+  const file = path.normalize(`${import.meta.dirname}${req.url}`);
 
-  if (!fs.existsSync(file)) {
+  if (!file.startsWith(import.meta.dirname) || !fs.existsSync(file)) {
     return false;
   }
 
