@@ -14,9 +14,8 @@ beforeEach(() => {
   counter++;
   vi.mocked(defaultLanguages).mockReturnValue(['en-US']);
 
-  data.strings = {en: {i18nId: 'This is a text'}};
-  data.locales.clear();
-  data.locales.add('en')
+  data.strings.clear();
+  data.strings.set('en', {i18nId: 'This is a text'});
   data.defaultLocale = 'en';
 });
 

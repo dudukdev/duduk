@@ -2,11 +2,9 @@ export type LocaleStrings = Record<string, string | Record<string, string>>;
 export type AcceptLocale = string | string[] | readonly string[];
 
 export const data: {
-  strings: Record<string, LocaleStrings>;
-  locales: Set<string>;
+  strings: Map<string, LocaleStrings>;
   defaultLocale: string | undefined;
 } = {
-  strings: {},
-  locales: new Set(),
+  strings: new Map(),
   defaultLocale: undefined
 };

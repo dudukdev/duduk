@@ -3,8 +3,7 @@ import {data} from "./data";
 import {localeStrings} from "./export";
 
 beforeEach(() => {
-  data.strings = {};
-  data.locales.clear();
+  data.strings.clear();
   data.defaultLocale = undefined;
 });
 
@@ -14,10 +13,7 @@ test('return nothing if locales empty', () => {
 });
 
 test('return nothing if defaultLocale not set', () => {
-  data.strings = {
-    de: {id1: 'deText', id2: 'deOther'}
-  };
-  data.locales.add('de');
+  data.strings.set('de', {id1: 'deText', id2: 'deOther'});
   data.defaultLocale = undefined;
 
   const result = localeStrings('de-DE, en-US');
@@ -25,12 +21,8 @@ test('return nothing if defaultLocale not set', () => {
 });
 
 test('return strings from language if first accepted language', () => {
-  data.strings = {
-    de: {id1: 'deText', id2: 'deOther'},
-    en: {id1: 'enText', id2: 'enOther'},
-  };
-  data.locales.add('de');
-  data.locales.add('en');
+  data.strings.set('de', {id1: 'deText', id2: 'deOther'});
+  data.strings.set('en', {id1: 'enText', id2: 'enOther'});
   data.defaultLocale = 'en';
 
   const result = localeStrings('de-DE, en-US');
@@ -38,12 +30,8 @@ test('return strings from language if first accepted language', () => {
 });
 
 test('return strings from language if not first accepted language', () => {
-  data.strings = {
-    de: {id1: 'deText', id2: 'deOther'},
-    en: {id1: 'enText', id2: 'enOther'},
-  };
-  data.locales.add('de');
-  data.locales.add('en');
+  data.strings.set('de', {id1: 'deText', id2: 'deOther'});
+  data.strings.set('en', {id1: 'enText', id2: 'enOther'});
   data.defaultLocale = 'en';
 
   const result = localeStrings('fr-FR, de-DE');
@@ -51,12 +39,8 @@ test('return strings from language if not first accepted language', () => {
 });
 
 test('return strings from default language accepted language not set', () => {
-  data.strings = {
-    de: {id1: 'deText', id2: 'deOther'},
-    en: {id1: 'enText', id2: 'enOther'},
-  };
-  data.locales.add('de');
-  data.locales.add('en');
+  data.strings.set('de', {id1: 'deText', id2: 'deOther'});
+  data.strings.set('en', {id1: 'enText', id2: 'enOther'});
   data.defaultLocale = 'en';
 
   const result = localeStrings('fr-FR');
@@ -64,12 +48,8 @@ test('return strings from default language accepted language not set', () => {
 });
 
 test('return strings from accepted language extended by default language', () => {
-  data.strings = {
-    de: {id1: 'deText', id2: 'deOther'},
-    en: {id1: 'enText', id2: 'enOther', id3: 'enNext'},
-  };
-  data.locales.add('de');
-  data.locales.add('en');
+  data.strings.set('de', {id1: 'deText', id2: 'deOther'});
+  data.strings.set('en', {id1: 'enText', id2: 'enOther', id3: 'enNext'});
   data.defaultLocale = 'en';
 
   const result = localeStrings('de-DE');

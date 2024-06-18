@@ -6,37 +6,33 @@ import {defaultLanguages} from "./defaultLanguage";
 vi.mock('./defaultLanguage', () => ({defaultLanguages: vi.fn()}));
 
 beforeEach(() => {
-  data.strings = {
-    en: {
-      simple: 'This is a text',
-      withVar: 'This is a {val} text',
-      plural: {
-        'count:one': '{count} apple',
-        'count:other': '{count} apples'
-      },
-      pluralWithVar: {
-        'count:one': '{count} {val} apple',
-        'count:other': '{count} {val} apples'
-      },
-      pluralDouble: {
-        'cOne:one cTwo:one': '{cOne} apple and {cTwo} horse',
-        'cOne:other cTwo:one': '{cOne} apples and {cTwo} horse',
-        'cOne:one cTwo:other': '{cOne} apple and {cTwo} horses',
-        'cOne:other cTwo:other': '{cOne} apples and {cTwo} horses'
-      },
-      pluralIncomplete: {
-        'count:one': '{count} apple',
-      },
-      onlyEng: 'Another text'
+  data.strings.clear();
+  data.strings.set('en', {
+    simple: 'This is a text',
+    withVar: 'This is a {val} text',
+    plural: {
+      'count:one': '{count} apple',
+      'count:other': '{count} apples'
     },
-    de: {
-      simple: 'Das ist ein Text',
-      withVar: 'Das ist ein {val} Text',
-    }
-  };
-  data.locales.clear();
-  data.locales.add('en')
-  data.locales.add('de')
+    pluralWithVar: {
+      'count:one': '{count} {val} apple',
+      'count:other': '{count} {val} apples'
+    },
+    pluralDouble: {
+      'cOne:one cTwo:one': '{cOne} apple and {cTwo} horse',
+      'cOne:other cTwo:one': '{cOne} apples and {cTwo} horse',
+      'cOne:one cTwo:other': '{cOne} apple and {cTwo} horses',
+      'cOne:other cTwo:other': '{cOne} apples and {cTwo} horses'
+    },
+    pluralIncomplete: {
+      'count:one': '{count} apple',
+    },
+    onlyEng: 'Another text'
+  });
+  data.strings.set('de', {
+    simple: 'Das ist ein Text',
+    withVar: 'Das ist ein {val} Text',
+  });
   data.defaultLocale = 'en';
 });
 

@@ -2,22 +2,16 @@ import {data} from "./data";
 
 export function loadLocaleClient(): void {
   if (window.__duduk?.locales !== undefined) {
-    data.strings = {
-      compiled: window.__duduk.locales
-    };
-    data.locales.clear();
-    data.locales.add('compiled');
+    data.strings.clear()
+    data.strings.set('compiled', window.__duduk.locales);
     data.defaultLocale = 'compiled';
   }
 }
 
 export function loadLocale(locale: string, localeStrings: object): void {
-  if (reservedPropertyName(data.strings, locale)) {
-    return;
+  if (!data.strings.has(locale)) {
+    data.strings.set(locale, {});
   }
-
-  data.strings[locale] ??= {};
-  data.locales.add(locale);
   if (data.defaultLocale === undefined) {
     data.defaultLocale = locale;
   }
@@ -26,18 +20,13 @@ export function loadLocale(locale: string, localeStrings: object): void {
     for (const [key, value] of Object.entries(entries)) {
       const newParts = [...parts, key];
       if (typeof value === 'string') {
-        data.strings[locale][newParts.join('.')] = value;
+        data.strings.get(locale)![newParts.join('.')] = value;
       } else if (key.endsWith('::plural')) {
-        data.strings[locale][[...parts, key.substring(0, key.length - 8)].join('.')] = value;
+        data.strings.get(locale)![[...parts, key.substring(0, key.length - 8)].join('.')] = value;
       } else {
         walker(newParts, value);
       }
     }
   }
   walker([], localeStrings);
-}
-
-function reservedPropertyName(obj: object, prop: string): boolean {
-  const propertyNames = Object.getOwnPropertyNames(Object.getPrototypeOf(obj));
-  return propertyNames.includes(prop);
 }
