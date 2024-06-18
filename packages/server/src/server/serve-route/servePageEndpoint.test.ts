@@ -1,10 +1,10 @@
 import type {IncomingMessage, RequestListener} from "node:http";
 import type {RoutePart} from "./models";
 import {afterEach, beforeEach, expect, test, vi} from "vitest";
-import {ssr} from "./ssr";
 import {printPage} from "./servePageEndpoint";
+import {ssr} from "@duduk/ssr";
 
-vi.mock('./ssr', () => ({
+vi.mock('@duduk/ssr', () => ({
   ssr: vi.fn()
 }));
 vi.mock('./rootFiles', () => ({

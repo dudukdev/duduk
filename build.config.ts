@@ -42,6 +42,17 @@ export default defineBuildConfig([
     failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
+    name: '@duduk/ssr',
+    rootDir: './packages/ssr',
+    entries: ['./index.ts'],
+    declaration: 'node16',
+    externals: [
+      /@duduk\/.*/ug,
+      'jsdom'
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
+  },
+  {
     name: '@duduk/server client components',
     rootDir: './packages/server',
     entries: [

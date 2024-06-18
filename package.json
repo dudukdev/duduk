@@ -19,7 +19,8 @@
     "packages/documentation",
     "packages/localization",
     "packages/messaging",
-    "packages/server"
+    "packages/server",
+    "packages/ssr"
   ],
   "devDependencies": {
     "@stryker-mutator/core": "^8.2.6",

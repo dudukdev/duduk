@@ -1,21 +1,17 @@
 {
-  "name": "@duduk/server",
+  "name": "@duduk/ssr",
   "version": "0.0.0",
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
   "files": [
     "dist"
   ],
-  "bin": {
-    "duduk": "dist/bin/index.mjs"
-  },
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
-  "engines": {
-    "node": ">=20"
-  },
   "dependencies": {
-    "esbuild": "^0.21.5",
-    "mime": "^4.0.3"
+    "jsdom": "^24.1.0"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7"
   }
 }

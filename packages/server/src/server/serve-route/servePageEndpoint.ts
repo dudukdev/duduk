@@ -1,9 +1,9 @@
 import type {LocaleStrings} from "@duduk/localization";
 import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
-import {ssr} from "./ssr";
 import {parseHeader} from "@duduk/content-negotiation";
 import {appCss, getLocaleStrings, rootCss, setupClient} from "./rootFiles";
+import {ssr} from "@duduk/ssr";
 
 interface Globals {
   pageData: object;

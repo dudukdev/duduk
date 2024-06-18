@@ -34,6 +34,7 @@
             <cards>
                 <title>Technical Packages</title>
                 <a href="duduk-content-negotiation.md" summary="Serve different resources based on user decision">Content Negotiation</a>
+                <a href="duduk-ssr.md" summary="Render HTML pages server-side, including WebComponents">SSR</a>
             </cards>
         </misc>
     </section-starting-page>
