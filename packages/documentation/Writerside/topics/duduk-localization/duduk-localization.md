@@ -1,3 +1,3 @@
-# @duduk/localization
+# Duduk Localization
 
 Start typing here...

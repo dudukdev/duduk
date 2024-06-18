@@ -118,7 +118,7 @@ test('serve rendered html root route with layout data', async () => {
     id: '',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
     layoutServer: {
-      data: async () => ({some: 'layoutData'})
+      data: vi.fn().mockResolvedValue({some: 'layoutData'})
     },
     parameter: false,
     routes: new Map()
@@ -130,6 +130,8 @@ test('serve rendered html root route with layout data', async () => {
 
   await printPage(mockRequest, mockResponse, mockRouteStack, {});
 
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-page-kvzo789t6i7f></fw-page-kvzo789t6i7f>',
@@ -216,10 +218,10 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
       page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
       layout: {path: '/__app/routes/layout-hd6e.js', id: 'ftzzt967gi67'},
       pageServer: {
-        data: async () => ({some: 'pageData', any: 'something from page'})
+        data: vi.fn().mockResolvedValue({some: 'pageData', any: 'something from page'})
       },
       layoutServer: {
-        data: async () => ({some: 'layoutData', other: 'data from layout'})
+        data: vi.fn().mockResolvedValue({some: 'layoutData', other: 'data from layout'})
       },
       parameter: false,
       routes: new Map()
@@ -229,10 +231,10 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
       page: {path: '/__app/routes/page-u97z.js', id: 'p7t86fuziuhs'},
       layout: {path: '/__app/routes/layout-63re.js', id: 'lhuo8z7it6ug'},
       pageServer: {
-        data: async () => ({some: 'subPageData', else: 'something from sub page'})
+        data: vi.fn().mockResolvedValue({some: 'subPageData', else: 'something from sub page'})
       },
       layoutServer: {
-        data: async () => ({some: 'subLayoutData', more: 'from sub layout'})
+        data: vi.fn().mockResolvedValue({some: 'subLayoutData', more: 'from sub layout'})
       },
       parameter: false,
       routes: new Map()
@@ -245,6 +247,13 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
 
   await printPage(mockRequest, mockResponse, mockRouteStack, {});
 
+  expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -283,10 +292,10 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
       page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
       layout: {path: '/__app/routes/layout-hd6e.js', id: 'ftzzt967gi67'},
       pageServer: {
-        data: async () => ({some: 'pageData', any: 'something from page'})
+        data: vi.fn().mockResolvedValue({some: 'pageData', any: 'something from page'})
       },
       layoutServer: {
-        data: async () => ({some: 'layoutData', other: 'data from layout'})
+        data: vi.fn().mockResolvedValue({some: 'layoutData', other: 'data from layout'})
       },
       parameter: false,
       routes: new Map()
@@ -296,10 +305,10 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
       page: {path: '/__app/routes/page-u97z.js', id: 'p7t86fuziuhs'},
       layout: {path: '/__app/routes/layout-63re.js', id: 'lhuo8z7it6ug'},
       pageServer: {
-        data: async () => ({some: 'subPageData', else: 'something from sub page'})
+        data: vi.fn().mockResolvedValue({some: 'subPageData', else: 'something from sub page'})
       },
       layoutServer: {
-        data: async () => ({some: 'subLayoutData', more: 'from sub layout'})
+        data: vi.fn().mockResolvedValue({some: 'subLayoutData', more: 'from sub layout'})
       },
       parameter: true,
       routes: new Map()
@@ -312,6 +321,13 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
 
   await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'});
 
+  expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',

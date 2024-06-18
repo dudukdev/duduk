@@ -1,4 +1,4 @@
-# Components
+# Duduk Components
 
 ```bash
 npm install @duduk/components

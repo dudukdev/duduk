@@ -1,3 +1,3 @@
-# @duduk/messaging
+# Duduk Messaging
 
 Start typing here...

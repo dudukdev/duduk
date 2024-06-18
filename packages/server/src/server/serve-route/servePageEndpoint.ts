@@ -17,7 +17,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
   let cumulatedData = {};
   for (const routePart of stack) {
     if (routePart.layoutServer?.data !== undefined) {
-      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req})}
+      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req, data: cumulatedData})}
     }
     if (routePart.layout !== undefined) {
       layouts.push({
@@ -32,7 +32,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
     res.end('500 Internal Server Error');
     return;
   }
-  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req}) : {}}
+  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData}) : {}}
   const page = {
     path: lastPart.page.path,
     id: lastPart.page.id

@@ -59,9 +59,9 @@ To process any data server-side before rendering the page, use a `pageServer.js`
 <tab title="pageServer.ts" group-key="typescript" id="pageServer.ts">
 <code-block lang="typescript">
 <![CDATA[
-import type {PageServerDataFunction} from "@duduk/server";
+import type {[[[PageServerDataFunction|server-types.md#pageserverdatafunction]]]} from "@duduk/server";
 
-export const data: PageServerDataFunction = async ({request}) => {
+export const data: PageServerDataFunction = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -70,8 +70,8 @@ export const data: PageServerDataFunction = async ({request}) => {
 <tab title="pageServer.js" group-key="javascript" id="pageServer.js">
 <code-block lang="javascript">
 <![CDATA[
-/** @type {import('@duduk/server').PageServerDataFunction} */
-export const data = async ({request}) => {
+/** @type {import('@duduk/server').[[[PageServerDataFunction|server-types.md#pageserverdatafunction]]]} */
+export const data = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -155,9 +155,9 @@ To process any data server-side before rendering the layout, use a `layoutServer
 <tab title="layoutServer.ts" group-key="typescript" id="layoutServer.ts">
 <code-block lang="typescript">
 <![CDATA[
-import type {LayoutServerDataFunction} from "@duduk/server";
+import type {[[[LayoutServerDataFunction|server-types.md#layoutserverdatafunction]]]} from "@duduk/server";
 
-export const data: LayoutServerDataFunction = async ({request}) => {
+export const data: LayoutServerDataFunction = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -166,8 +166,8 @@ export const data: LayoutServerDataFunction = async ({request}) => {
 <tab title="layoutServer.js" group-key="javascript" id="layoutServer.js">
 <code-block lang="javascript">
 <![CDATA[
-/** @type {import('@duduk/server').LayoutServerDataFunction} */
-export const data = async ({request}) => {
+/** @type {import('@duduk/server').[[[LayoutServerDataFunction|server-types.md#layoutserverdatafunction]]]} */
+export const data = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -224,7 +224,7 @@ Page endpoints are defined in the `pageServer.js` or `pageServer.ts` file.
 <tab title="pageServer.ts" group-key="typescript" id="pageServer.ts-rest">
 <code-block lang="typescript">
 <![CDATA[
-import type {PageServerHttpFunction} from "@duduk/server";
+import type {[[[PageServerHttpFunction|server-types.md#pageserverhttpfunction]]]} from "@duduk/server";
 
 export const GET: PageServerHttpFunction = async ({request, response, data, params}) => {
     response.writeHead(200, {'Content-Type': 'application/json'});
@@ -241,7 +241,7 @@ export const DELETE: PageServerHttpFunction = ...
 <tab title="pageServer.js" group-key="javascript" id="pageServer.js-rest">
 <code-block lang="javascript">
 <![CDATA[
-/** @type {import('@duduk/server').PageServerHttpFunction} */
+/** @type {import('@duduk/server').[[[PageServerHttpFunction|server-types.md#pageserverhttpfunction]]]} */
 export const GET = async ({request, response, data, params}) => {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify({...data, doo: 'ba'}));
@@ -265,7 +265,7 @@ Layout endpoints are defined in a `layoutServer.ts` or `layoutServer.js` file. T
 <tab title="layoutServer.ts" group-key="typescript" id="layoutServer.ts-rest">
 <code-block lang="typescript">
 <![CDATA[
-import type {LayoutServerHttpFunction} from "@duduk/server";
+import type {[[[LayoutServerHttpFunction|server-types.md#layoutserverhttpfunction]]]} from "@duduk/server";
 
 export const GET: LayoutServerHttpFunction = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
@@ -281,7 +281,7 @@ export const DELETE: LayoutServerHttpFunction = ...
 <tab title="layoutServer.js" group-key="javascript" id="layoutServer.js-rest">
 <code-block lang="javascript">
 <![CDATA[
-/** @type {import('@duduk/server').LayoutServerHttpFunction} */
+/** @type {import('@duduk/server').[[[LayoutServerHttpFunction|server-types.md#layoutserverhttpfunction]]]} */
 export const GET = async ({request, data}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }

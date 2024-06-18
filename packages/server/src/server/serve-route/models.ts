@@ -1,8 +1,8 @@
 import type {IncomingMessage, ServerResponse} from "node:http";
 
-export type PageServerDataFunction = (params: { request: IncomingMessage }) => Promise<object>;
+export type PageServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData }) => Promise<object>;
 export type PageServerHttpFunction<TData = object> = (params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string> }) => Promise<void>;
-export type LayoutServerDataFunction = (params: { request: IncomingMessage }) => Promise<object>;
+export type LayoutServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData }) => Promise<object>;
 export type LayoutServerHttpFunction<TData = object> = (params: { request: IncomingMessage; data: TData }) => Promise<object>;
 
 export interface RoutePart {

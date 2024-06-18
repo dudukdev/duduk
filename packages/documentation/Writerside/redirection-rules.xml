@@ -6,4 +6,8 @@
         <accepts>page.html</accepts>
     </rule>
     -->
+    <rule id="3d1ab219">
+        <description>Created after removal of "Section Starting Page" from Duduk</description>
+        <accepts>Section-Starting-Page.html</accepts>
+    </rule>
 </rules>

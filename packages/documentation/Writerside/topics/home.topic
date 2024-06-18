@@ -22,14 +22,20 @@
             <a href="duduk-server.md" type="server" summary="Create a web server">Server</a>
             <a href="duduk-localization.md" type="world" summary="Built-in support for multiple languages">Localization</a>
             <a href="duduk-messaging.md" type="mail" summary="Send asynchronous messages between components">Messaging</a>
-            <a href="duduk-content-negotiation.md" type="branch" summary="Serve different resources based on user decision">Content Negotiation</a>
         </primary>
         
         <secondary>
-            <title>More</title>
+            <title>Resources</title>
             <a href="js-server-runtime.md">JavaScript Runtimes</a>
-            <a href="">Other</a>
+            <a href="types.md">Types</a>
         </secondary>
+
+        <misc>
+            <cards>
+                <title>Technical Packages</title>
+                <a href="duduk-content-negotiation.md" summary="Serve different resources based on user decision">Content Negotiation</a>
+            </cards>
+        </misc>
     </section-starting-page>
 
 </topic>
