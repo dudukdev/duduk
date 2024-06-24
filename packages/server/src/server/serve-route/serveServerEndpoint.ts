@@ -10,7 +10,7 @@ export async function executeServer(req: IncomingMessage, res: Parameters<Reques
   for (const routePart of stack) {
     const httpHandler = routePart.layoutServer?.[method];
     if (httpHandler !== undefined) {
-      cumulatedData = {...cumulatedData, ...await httpHandler({request: req, data: cumulatedData, locals})};
+      cumulatedData = {...cumulatedData, ...await httpHandler({request: req, data: cumulatedData, params, locals})};
     }
   }
 

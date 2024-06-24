@@ -3,7 +3,7 @@
 ## LayoutServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
 ```
 
 Parameter `params`
@@ -12,6 +12,9 @@ Parameter `params`
 
   `data: <TData>`
   : Cumulated data from the layoutServer data functions, or an empty object if first layoutServer data function.
+
+  `params: Record<string, string>`
+  : Values from dynamic route parts
 
   `locals: App.Locals`
   : Data cumulated from middlewares
@@ -22,7 +25,7 @@ Return Value
 ## LayoutServerHttpFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
 ```
 
 Parameter `params`
@@ -31,6 +34,10 @@ Parameter `params`
 
   `data: <TData>`
   : Cumulated data from the previous layoutServer HTTP functions, or an empty object if first layoutServer HTTP function.
+
+
+  `params: Record<string, string>`
+  : Values from dynamic route parts
 
   `locals: App.Locals`
   : Data cumulated from middlewares
@@ -72,7 +79,7 @@ Return Value
 ## PageServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
 ```
 
 Parameter `params`
@@ -81,6 +88,10 @@ Parameter `params`
 
   `data: <TData>`
   : Cumulated data from the previous layoutServer data functions, or empty object if no previous layoutServer data functions exists.
+
+
+  `params: Record<string, string>`
+  : Values from dynamic route parts
 
   `locals: App.Locals`
   : Data cumulated from middlewares

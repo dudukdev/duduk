@@ -19,9 +19,9 @@ test('execute server endpoint with layout', async () => {
   await executeServer(mockRequest, mockResponse, mockStack, {my: 'param'}, {other: 'locals'});
 
   expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledOnce();
-  expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {other: 'locals'}});
+  expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {my: 'param'}, locals: {other: 'locals'}});
   expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledOnce();
-  expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {some: 'data', more: 'stuff'}, locals: {other: 'locals'}});
+  expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {some: 'data', more: 'stuff'}, params: {my: 'param'}, locals: {other: 'locals'}});
   expect(mockStack[2].pageServer!.GET).toHaveBeenCalledOnce();
   expect(mockStack[2].pageServer!.GET).toHaveBeenCalledWith({request: mockRequest, response: mockResponse, data: {some: 'other', any: 'thing', more: 'stuff'}, params: {my: 'param'}, locals: {other: 'locals'}});
 });
@@ -42,9 +42,9 @@ test('execute server endpoint with layout if method not set', async () => {
   await executeServer(mockRequest, mockResponse, mockStack, {my: 'param'}, {other: 'locals'});
 
   expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledOnce();
-  expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {other: 'locals'}});
+  expect(mockStack[0].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {my: 'param'}, locals: {other: 'locals'}});
   expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledOnce();
-  expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {some: 'data', more: 'stuff'}, locals: {other: 'locals'}});
+  expect(mockStack[2].layoutServer!.GET).toHaveBeenCalledWith({request: mockRequest, data: {some: 'data', more: 'stuff'}, params: {my: 'param'}, locals: {other: 'locals'}});
   expect(mockStack[2].pageServer!.GET).toHaveBeenCalledOnce();
   expect(mockStack[2].pageServer!.GET).toHaveBeenCalledWith({request: mockRequest, response: mockResponse, data: {some: 'other', any: 'thing', more: 'stuff'}, params: {my: 'param'}, locals: {other: 'locals'}});
 });

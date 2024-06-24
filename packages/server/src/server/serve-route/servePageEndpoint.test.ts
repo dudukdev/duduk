@@ -131,7 +131,7 @@ test('serve rendered html root route with layout data', async () => {
   await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'});
 
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-page-kvzo789t6i7f></fw-page-kvzo789t6i7f>',
@@ -249,11 +249,11 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -323,11 +323,11 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
