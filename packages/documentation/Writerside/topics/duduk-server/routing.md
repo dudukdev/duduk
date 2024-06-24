@@ -61,7 +61,7 @@ To process any data server-side before rendering the page, use a `pageServer.js`
 <![CDATA[
 import type {[[[PageServerDataFunction|server-types.md#pageserverdatafunction]]]} from "@duduk/server";
 
-export const data: PageServerDataFunction = async ({request, data}) => {
+export const data: PageServerDataFunction = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -71,7 +71,7 @@ export const data: PageServerDataFunction = async ({request, data}) => {
 <code-block lang="javascript">
 <![CDATA[
 /** @type {import('@duduk/server').[[[PageServerDataFunction|server-types.md#pageserverdatafunction]]]} */
-export const data = async ({request, data}) => {
+export const data = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -157,7 +157,7 @@ To process any data server-side before rendering the layout, use a `layoutServer
 <![CDATA[
 import type {[[[LayoutServerDataFunction|server-types.md#layoutserverdatafunction]]]} from "@duduk/server";
 
-export const data: LayoutServerDataFunction = async ({request, data}) => {
+export const data: LayoutServerDataFunction = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -167,7 +167,7 @@ export const data: LayoutServerDataFunction = async ({request, data}) => {
 <code-block lang="javascript">
 <![CDATA[
 /** @type {import('@duduk/server').[[[LayoutServerDataFunction|server-types.md#layoutserverdatafunction]]]} */
-export const data = async ({request, data}) => {
+export const data = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 ]]>
@@ -226,7 +226,7 @@ Page endpoints are defined in the `pageServer.js` or `pageServer.ts` file.
 <![CDATA[
 import type {[[[PageServerHttpFunction|server-types.md#pageserverhttpfunction]]]} from "@duduk/server";
 
-export const GET: PageServerHttpFunction = async ({request, response, data, params}) => {
+export const GET: PageServerHttpFunction = async ({request, response, data, params, locals}) => {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify({...data, doo: 'ba'}));
 }
@@ -242,7 +242,7 @@ export const DELETE: PageServerHttpFunction = ...
 <code-block lang="javascript">
 <![CDATA[
 /** @type {import('@duduk/server').[[[PageServerHttpFunction|server-types.md#pageserverhttpfunction]]]} */
-export const GET = async ({request, response, data, params}) => {
+export const GET = async ({request, response, data, params, locals}) => {
     response.writeHead(200, {'Content-Type': 'application/json'});
     response.end(JSON.stringify({...data, doo: 'ba'}));
 }
@@ -267,7 +267,7 @@ Layout endpoints are defined in a `layoutServer.ts` or `layoutServer.js` file. T
 <![CDATA[
 import type {[[[LayoutServerHttpFunction|server-types.md#layoutserverhttpfunction]]]} from "@duduk/server";
 
-export const GET: LayoutServerHttpFunction = async ({request, data}) => {
+export const GET: LayoutServerHttpFunction = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 
@@ -282,7 +282,7 @@ export const DELETE: LayoutServerHttpFunction = ...
 <code-block lang="javascript">
 <![CDATA[
 /** @type {import('@duduk/server').[[[LayoutServerHttpFunction|server-types.md#layoutserverhttpfunction]]]} */
-export const GET = async ({request, data}) => {
+export const GET = async ({request, data, locals}) => {
     return {title: 'Hello', foo: 'bar', Lorem: 'ipsum'};
 }
 

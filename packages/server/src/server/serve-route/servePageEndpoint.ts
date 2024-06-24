@@ -12,12 +12,12 @@ interface Globals {
   locales?: LocaleStrings;
 }
 
-export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>): Promise<void> {
+export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals): Promise<void> {
   const layouts: { path: string; id: string }[] = [];
   let cumulatedData = {};
   for (const routePart of stack) {
     if (routePart.layoutServer?.data !== undefined) {
-      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req, data: cumulatedData})}
+      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req, data: cumulatedData, locals})}
     }
     if (routePart.layout !== undefined) {
       layouts.push({
@@ -32,7 +32,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
     res.end('500 Internal Server Error');
     return;
   }
-  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData}) : {}}
+  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData, locals}) : {}}
   const page = {
     path: lastPart.page.path,
     id: lastPart.page.id

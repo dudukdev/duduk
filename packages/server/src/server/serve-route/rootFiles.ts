@@ -1,4 +1,5 @@
 import fsPromise from "node:fs/promises";
+import type {Middlewares} from "./models";
 
 export const rootCss: string | undefined = await (async function () {
   const folder = `${import.meta.dirname}/__app`;
@@ -28,6 +29,18 @@ export const setupClient: string | undefined = await (async function () {
   for (const itemName of items) {
     if (itemName.startsWith('setupClient-') && itemName.endsWith('.js')) {
       return `/__app/${itemName}`;
+    }
+  }
+  return undefined;
+})();
+
+export const setupServer = await (async function () {
+  const folder = `${import.meta.dirname}/__app`;
+  const items = await fsPromise.readdir(folder);
+  for (const itemName of items) {
+    if (itemName.startsWith('setupServer-') && itemName.endsWith('.js')) {
+      const setupServer: {middlewares: Middlewares | undefined} = await import(`${folder}/${itemName}`);
+      return setupServer;
     }
   }
   return undefined;

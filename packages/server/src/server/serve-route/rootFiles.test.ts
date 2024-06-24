@@ -10,6 +10,9 @@ vi.mock('node:fs/promises', () => ({
 vi.mock(`${import.meta.dirname}/__app/_.._/inject/locales-nhd73.js`, () => ({
   getLocaleStrings: () => {}
 }));
+vi.mock(`${import.meta.dirname}/__app/setupServer-nhd73.js`, () => ({
+  middlewares: []
+}));
 
 afterEach(() => {
   vi.resetAllMocks();
@@ -29,7 +32,7 @@ describe('rootCss', () => {
     expect(rootCss).toEqual('some root css file content');
   });
 
-  test('return undefined if not rootCss file', async () => {
+  test('return undefined if no rootCss file', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
     vi.mocked(fsPromise.readFile).mockResolvedValue('some root css file content');
@@ -53,7 +56,7 @@ describe('appCss', () => {
     expect(appCss).toEqual('/__app/app-nhd73.css');
   });
 
-  test('return undefined if not appCss file', async () => {
+  test('return undefined if no appCss file', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
 
@@ -75,7 +78,7 @@ describe('setupClient', () => {
     expect(setupClient).toEqual('/__app/setupClient-nhd73.js');
   });
 
-  test('return undefined if not setupClient file', async () => {
+  test('return undefined if no setupClient file', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
 
@@ -83,6 +86,28 @@ describe('setupClient', () => {
 
     expect(fsPromise.readdir).toHaveBeenCalledWith(`${import.meta.dirname}/__app`);
     expect(setupClient).toBeUndefined();
+  });
+});
+
+describe('setupServer', () => {
+  test('return setup functions', async () => {
+    // @ts-ignore
+    vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'setupServer-nhd73.js', 'someFolder']);
+
+    const {setupServer} = await import('./rootFiles');
+
+    expect(fsPromise.readdir).toHaveBeenCalledWith(`${import.meta.dirname}/__app`);
+    expect(setupServer).toEqual(await import(`${import.meta.dirname}/__app/setupServer-nhd73.js`));
+  });
+
+  test('return undefined if no locales file', async () => {
+    // @ts-ignore
+    vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
+
+    const {setupServer} = await import('./rootFiles');
+
+    expect(fsPromise.readdir).toHaveBeenCalledWith(`${import.meta.dirname}/__app`);
+    expect(setupServer).toBeUndefined();
   });
 });
 
@@ -97,7 +122,7 @@ describe('getLocaleStrings', () => {
     expect(getLocaleStrings).toEqual((await import(`${import.meta.dirname}/__app/_.._/inject/locales-nhd73.js`)).getLocaleStrings);
   });
 
-  test('return undefined if not setupClient file', async () => {
+  test('return undefined if no locales file', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
 

@@ -34,7 +34,7 @@ test('serve rendered html root route without layout', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -80,7 +80,7 @@ test('serve rendered html root route with layout', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -128,10 +128,10 @@ test('serve rendered html root route with layout data', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'});
 
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-page-kvzo789t6i7f></fw-page-kvzo789t6i7f>',
@@ -178,7 +178,7 @@ test('serve rendered html root route with page data', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -245,15 +245,15 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'});
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -319,15 +319,15 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'}, {some: 'locals'});
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, locals: {some: 'locals'}});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, locals: {some: 'locals'}});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -370,7 +370,7 @@ test('return 500 if no page endpoint specified', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).not.toHaveBeenCalled();
   expect(mockResponse.writeHead).toHaveBeenCalledWith(500);
@@ -399,7 +399,7 @@ test('serve rendered html route with root files', async () => {
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -468,7 +468,7 @@ test('serve rendered html route with root files with accept-language with origin
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -536,7 +536,7 @@ test('serve rendered html route with root files with host without referer or ori
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -602,7 +602,7 @@ test('serve rendered html route with root files without referer or origin or hos
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(

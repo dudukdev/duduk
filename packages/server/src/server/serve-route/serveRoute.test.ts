@@ -1,8 +1,8 @@
-import type {RoutePart} from "./models";
+import type {IncomingMessage, RequestListener} from "node:http";
+import type {Middlewares, RoutePart} from "./models";
 import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 import fsPromise from "node:fs/promises";
 import {getRoutes} from "./parseRoutes";
-import type {IncomingMessage, RequestListener} from "node:http";
 import {serveRoute} from "./serveRoute";
 import {printPage} from "./servePageEndpoint";
 import {executeServer} from "./serveServerEndpoint";
@@ -130,6 +130,9 @@ const {mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOth
   };
   return {mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOtherRoute, mockRootRoute};
 });
+const mockSetupServer: {middlewares: Middlewares | undefined} = vi.hoisted(() => ({
+  middlewares: undefined
+}));
 
 vi.mock('node:fs/promises', () => ({
   default: {
@@ -145,26 +148,18 @@ vi.mock('./servePageEndpoint', () => ({
 vi.mock('./serveServerEndpoint', () => ({
   executeServer: vi.fn()
 }));
+vi.mock('./rootFiles', () => ({
+  setupServer: mockSetupServer
+}));
 
 beforeEach(() => {
   vi.mocked(fsPromise.readdir).mockResolvedValue([]);
   vi.mocked(getRoutes).mockResolvedValue(mockRootRoute);
+  mockSetupServer.middlewares = undefined;
 });
 
 afterEach(() => {
   vi.resetAllMocks();
-});
-
-test('execute setupServer.js', async () => {
-  // @ts-ignore
-  vi.mocked(fsPromise.readdir).mockResolvedValue(['something.js', 'setupServer-asdf.js', 'other.css']);
-  const mockImportFactory = vi.fn().mockReturnValue({});
-  vi.doMock(`${import.meta.dirname}/__app/setupServer-asdf.js`, mockImportFactory);
-  vi.resetModules();
-
-  await import('./serveRoute');
-
-  expect(mockImportFactory).toHaveBeenCalledOnce();
 });
 
 describe('print page', () => {
@@ -177,7 +172,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -193,7 +188,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -209,7 +204,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -225,7 +220,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -241,7 +236,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubSubRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubSubRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -272,7 +267,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockOtherSubRoute], {});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockOtherSubRoute], {}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -288,7 +283,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockParamRoute], {someParam: 'someAsdf'});
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockParamRoute], {someParam: 'someAsdf'}, {});
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -311,6 +306,35 @@ describe('print page', () => {
       expect(mockResponse.end).toHaveBeenCalledOnce();
     });
   });
+
+  test('execute middlewares and pass locales', async () => {
+    // @ts-ignore
+    const mockRequest: IncomingMessage = {url: '/', method: 'GET', headers: {host: 'localhost', accept: 'text/html'}};
+    // @ts-ignore
+    const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+    mockSetupServer.middlewares = [
+      vi.fn().mockImplementation(async ({event, resolve}) => {
+        event.locals = {my: 'stuff', other: 'things'};
+        return await resolve(event);
+      }),
+      vi.fn().mockImplementation(async ({event, resolve}) => {
+        event.locals.my = 'local';
+        event.locals.some = 'type';
+        return await resolve(event);
+      })
+    ];
+
+    const result = await serveRoute(mockRequest, mockResponse);
+
+    expect(mockSetupServer.middlewares[0]).toHaveBeenCalledOnce();
+    expect(mockSetupServer.middlewares[1]).toHaveBeenCalledOnce();
+    expect(printPage).toHaveBeenCalledOnce();
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {my: 'local', other: 'things', some: 'type'});
+    expect(executeServer).not.toHaveBeenCalled();
+    expect(result).toBeTruthy();
+    expect(mockResponse.writeHead).not.toHaveBeenCalled();
+    expect(mockResponse.end).not.toHaveBeenCalled();
+  });
 });
 
 describe('execute server', () => {
@@ -323,7 +347,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {});
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {});
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -339,7 +363,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubRoute], {});
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubRoute], {}, {});
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -355,7 +379,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubSubRoute], {});
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockSubSubRoute], {}, {});
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -386,7 +410,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockOtherSubRoute], {});
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockOtherSubRoute], {}, {});
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -402,7 +426,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockParamRoute], {someParam: 'someAsdf'});
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockOtherRoute, mockParamRoute], {someParam: 'someAsdf'}, {});
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -437,6 +461,35 @@ describe('execute server', () => {
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).toHaveBeenCalledWith(405);
     expect(mockResponse.end).toHaveBeenCalledOnce();
+  });
+
+  test('execute middlewares and pass locales', async () => {
+    // @ts-ignore
+    const mockRequest: IncomingMessage = {url: '/', method: 'GET', headers: {host: 'localhost', accept: 'application/json'}};
+    // @ts-ignore
+    const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+    mockSetupServer.middlewares = [
+      vi.fn().mockImplementation(async ({event, resolve}) => {
+        event.locals = {my: 'stuff', other: 'things'};
+        return await resolve(event);
+      }),
+      vi.fn().mockImplementation(async ({event, resolve}) => {
+        event.locals.my = 'local';
+        event.locals.some = 'type';
+        return await resolve(event);
+      })
+    ];
+
+    const result = await serveRoute(mockRequest, mockResponse);
+
+    expect(mockSetupServer.middlewares[0]).toHaveBeenCalledOnce();
+    expect(mockSetupServer.middlewares[1]).toHaveBeenCalledOnce();
+    expect(executeServer).toHaveBeenCalledOnce();
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {my: 'local', other: 'things', some: 'type'});
+    expect(printPage).not.toHaveBeenCalled();
+    expect(result).toBeTruthy();
+    expect(mockResponse.writeHead).not.toHaveBeenCalled();
+    expect(mockResponse.end).not.toHaveBeenCalled();
   });
 });
 
