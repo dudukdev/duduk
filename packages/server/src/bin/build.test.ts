@@ -151,6 +151,9 @@ test('call build with files', async () => {
     bundle: true,
     platform: 'node',
     format: 'esm',
+    treeShaking: true,
+    minify: true,
+    packages: 'bundle',
     external: ['jsdom', 'mime', 'myPackage']
   });
 
@@ -223,6 +226,9 @@ test('call watch with files', async () => {
     bundle: true,
     platform: 'node',
     format: 'esm',
+    treeShaking: true,
+    minify: true,
+    packages: 'bundle',
     external: ['jsdom', 'mime']
   });
   expect(mockContext.watch).toHaveBeenCalledTimes(2);

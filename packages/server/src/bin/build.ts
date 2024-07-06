@@ -75,6 +75,9 @@ export async function build(watch: boolean): Promise<void> {
     bundle: true,
     platform: 'node',
     format: 'esm',
+    treeShaking: true,
+    minify: true,
+    packages: 'bundle',
     external: ['jsdom', 'mime', ...Object.keys(packageJson.dependencies ?? {})]
   };
 
