@@ -1,4 +1,3 @@
-import type {LocaleStrings} from "@duduk/localization";
 import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
 import {parseHeader} from "@duduk/content-negotiation";
@@ -9,7 +8,7 @@ interface Globals {
   pageData: object;
   pageParams: Record<string, string>;
   prependStyles: string | undefined;
-  locales?: LocaleStrings;
+  locales?: Record<string, string | Record<string, string>>;
 }
 
 export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals): Promise<void> {
