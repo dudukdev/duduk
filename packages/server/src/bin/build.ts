@@ -2,10 +2,16 @@ import type {BuildOptions} from "esbuild";
 import * as esbuild from 'esbuild';
 import fs from "node:fs";
 import path from "node:path";
+import fsPromise from "node:fs/promises";
+
+const nodePackages: string[] = ['node:*', 'crypto', 'fs', 'fs/promises', 'http', 'os', 'path', 'vm'];
 
 export async function build(watch: boolean): Promise<void> {
   fs.rmSync('dist', {recursive: true, force: true});
   fs.mkdirSync('dist/__app', {recursive: true});
+
+  const packageJsonFile = await fsPromise.readFile(path.join(process.cwd(), './package.json'), {encoding: 'utf-8'});
+  const packageJson: {dependencies?: Record<string, string>} = JSON.parse(packageJsonFile);
 
   const entryPoints: string[] = [];
 
@@ -60,7 +66,7 @@ export async function build(watch: boolean): Promise<void> {
       '.ttf': 'file',
       '.woff2': 'file',
     },
-    external: ['node*'],
+    external: [...nodePackages, ...Object.keys(packageJson.dependencies ?? {})],
     sourcemap: 'linked'
   };
   const serverBuildOptions: BuildOptions = {
@@ -69,7 +75,7 @@ export async function build(watch: boolean): Promise<void> {
     bundle: true,
     platform: 'node',
     format: 'esm',
-    external: ['jsdom', 'mime']
+    external: ['jsdom', 'mime', ...Object.keys(packageJson.dependencies ?? {})]
   };
 
   if (watch) {

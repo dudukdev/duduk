@@ -1,7 +1,9 @@
 import * as esbuild from 'esbuild';
 import fs from "node:fs";
+import fsPromise from "node:fs/promises";
 import {afterEach, beforeEach, expect, test, vi} from "vitest";
 import {build} from "./build";
+import path from "node:path";
 
 vi.mock('esbuild', () => ({
   context: vi.fn(),
@@ -14,6 +16,11 @@ vi.mock('node:fs', () => ({
     readdirSync: vi.fn(),
     lstatSync: vi.fn(),
     existsSync: vi.fn()
+  }
+}));
+vi.mock('node:fs/promises', () => ({
+  default: {
+    readFile: vi.fn()
   }
 }));
 
@@ -47,6 +54,7 @@ beforeEach(() => {
   });
   vi.mocked(fs.existsSync).mockImplementation((path) => {
     return [
+      'package.json',
       'src',
       'src/app.css',
       'src/root.css',
@@ -82,6 +90,14 @@ afterEach(() => {
 
 test('call build with files', async () => {
   vi.doMock('@duduk/localization', () => ({}));
+  vi.mocked(fsPromise.readFile).mockImplementation(filePath => {
+    switch (filePath) {
+      case path.join(process.cwd(), './package.json'):
+        return Promise.resolve('{"dependencies": {"myPackage":"1.0.0"}}');
+      default:
+        throw new Error('file not exists');
+    }
+  });
 
   await build(false);
 
@@ -126,7 +142,7 @@ test('call build with files', async () => {
       '.ttf': 'file',
       '.woff2': 'file',
     },
-    external: ['node*'],
+    external: ['node:*', 'crypto', 'fs', 'fs/promises', 'http', 'os', 'path', 'vm', 'myPackage'],
     sourcemap: 'linked',
   });
   expect(esbuild.build).toHaveBeenCalledWith({
@@ -135,7 +151,7 @@ test('call build with files', async () => {
     bundle: true,
     platform: 'node',
     format: 'esm',
-    external: ['jsdom', 'mime']
+    external: ['jsdom', 'mime', 'myPackage']
   });
 
   expect(esbuild.context).not.toHaveBeenCalled();
@@ -146,6 +162,14 @@ test('call watch with files', async () => {
   const mockContext = {watch: vi.fn()};
   // @ts-ignore
   vi.mocked(esbuild.context).mockResolvedValue(mockContext);
+  vi.mocked(fsPromise.readFile).mockImplementation(filePath => {
+    switch (filePath) {
+      case path.join(process.cwd(), './package.json'):
+        return Promise.resolve('{}');
+      default:
+        throw new Error('file not exists');
+    }
+  });
 
   await build(true);
   await new Promise(resolve => setTimeout(resolve, 0));
@@ -190,7 +214,7 @@ test('call watch with files', async () => {
       '.ttf': 'file',
       '.woff2': 'file',
     },
-    external: ['node*'],
+    external: ['node:*', 'crypto', 'fs', 'fs/promises', 'http', 'os', 'path', 'vm'],
     sourcemap: 'linked',
   });
   expect(esbuild.context).toHaveBeenCalledWith({
