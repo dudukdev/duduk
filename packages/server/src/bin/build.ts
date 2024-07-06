@@ -41,7 +41,9 @@ export async function build(watch: boolean): Promise<void> {
   addJsOrTs(entryPoints, 'src/setupServer');
   addJsOrTs(entryPoints, 'src/setupClient');
 
-  entryPoints.push('inject/locales.mjs');
+  if (await localizationModuleInstalled()) {
+    entryPoints.push('inject/locales.mjs');
+  }
 
   const routesBuildOptions: BuildOptions = {
     entryPoints,
@@ -93,4 +95,12 @@ function addJsOrTs(entryPoints: string[], filePath: string): void {
   } else if (fs.existsSync(`${filePath}.ts`)) {
     entryPoints.push(`${filePath}.ts`);
   }
+}
+
+async function localizationModuleInstalled(): Promise<boolean> {
+  try {
+    await import('@duduk/localization');
+    return true;
+  } catch {}
+  return false;
 }

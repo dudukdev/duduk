@@ -1,6 +1,12 @@
 import {afterEach, describe, expect, test, vi} from "vitest";
+import fs from 'node:fs';
 import fsPromise from "node:fs/promises";
 
+vi.mock('node:fs', () => ({
+  default: {
+    existsSync: vi.fn()
+  }
+}));
 vi.mock('node:fs/promises', () => ({
   default: {
     readdir: vi.fn(),
@@ -115,20 +121,36 @@ describe('getLocaleStrings', () => {
   test('return getLocaleStrings function', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'locales-nhd73.js', 'someFolder']);
+    vi.mocked(fs.existsSync).mockReturnValue(true);
 
     const {getLocaleStrings} = await import('./rootFiles');
 
+    expect(fs.existsSync).toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
     expect(fsPromise.readdir).toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
     expect(getLocaleStrings).toEqual((await import(`${import.meta.dirname}/__app/_.._/inject/locales-nhd73.js`)).getLocaleStrings);
   });
 
-  test('return undefined if no locales file', async () => {
+  test('return undefined if directory exists but no locales file', async () => {
     // @ts-ignore
     vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
+    vi.mocked(fs.existsSync).mockReturnValue(true);
 
     const {getLocaleStrings} = await import('./rootFiles');
 
+    expect(fs.existsSync).toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
     expect(fsPromise.readdir).toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
+    expect(getLocaleStrings).toBeUndefined();
+  });
+
+  test('return undefined if directory not exists', async () => {
+    // @ts-ignore
+    vi.mocked(fsPromise.readdir).mockResolvedValue(['otherFile.js', 'someFolder']);
+    vi.mocked(fs.existsSync).mockReturnValue(false);
+
+    const {getLocaleStrings} = await import('./rootFiles');
+
+    expect(fs.existsSync).toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
+    expect(fsPromise.readdir).not.toHaveBeenCalledWith(`${import.meta.dirname}/__app/_.._/inject`);
     expect(getLocaleStrings).toBeUndefined();
   });
 });

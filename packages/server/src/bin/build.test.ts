@@ -18,6 +18,7 @@ vi.mock('node:fs', () => ({
 }));
 
 beforeEach(() => {
+  vi.resetModules();
   // @ts-ignore
   vi.mocked(fs.readdirSync).mockImplementation((path) => {
     const filesTs = ['page.ts', 'pageServer.ts', 'layout.ts', 'layoutServer.ts'];
@@ -80,6 +81,8 @@ afterEach(() => {
 });
 
 test('call build with files', async () => {
+  vi.doMock('@duduk/localization', () => ({}));
+
   await build(false);
 
   expect(fs.rmSync).toHaveBeenCalledWith('dist', {recursive: true, force: true});
@@ -139,6 +142,7 @@ test('call build with files', async () => {
 });
 
 test('call watch with files', async () => {
+  vi.doMock('@duduk/localization', () => {throw 'nothing';});
   const mockContext = {watch: vi.fn()};
   // @ts-ignore
   vi.mocked(esbuild.context).mockResolvedValue(mockContext);
@@ -169,8 +173,7 @@ test('call watch with files', async () => {
       'src/app.css',
       'src/root.css',
       'src/setupServer.ts',
-      'src/setupClient.js',
-      'inject/locales.mjs',
+      'src/setupClient.js'
     ],
     entryNames: '[dir]/[name]-[hash]',
     nodePaths: [

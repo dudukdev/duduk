@@ -1,5 +1,6 @@
-import fsPromise from "node:fs/promises";
 import type {Middlewares} from "./models";
+import fsPromise from "node:fs/promises";
+import fs from 'node:fs';
 
 export const rootCss: string | undefined = await (async function () {
   const folder = `${import.meta.dirname}/__app`;
@@ -48,11 +49,13 @@ export const setupServer = await (async function () {
 
 export const getLocaleStrings = await (async function () {
   const folder = `${import.meta.dirname}/__app/_.._/inject`;
-  const items = await fsPromise.readdir(folder);
-  for (const itemName of items) {
-    if (itemName.startsWith('locales-') && itemName.endsWith('.js')) {
-      const localesFiles: typeof import('../../inject/locales') = await import(`${folder}/${itemName}`);
-      return localesFiles.getLocaleStrings;
+  if (fs.existsSync(folder)) {
+    const items = await fsPromise.readdir(folder);
+    for (const itemName of items) {
+      if (itemName.startsWith('locales-') && itemName.endsWith('.js')) {
+        const localesFiles: typeof import('../../inject/locales') = await import(`${folder}/${itemName}`);
+        return localesFiles.getLocaleStrings;
+      }
     }
   }
   return undefined;
