@@ -8,19 +8,22 @@ declare global {
   }
 }
 
-export type PageServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }) => Promise<object>;
-export type PageServerHttpFunction<TData = object> = (params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals }) => Promise<void>;
-export type LayoutServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }) => Promise<object>;
-export type LayoutServerHttpFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }) => Promise<object>;
+export type PageServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals, routeId: string }) => Promise<object>;
+export type PageServerHttpFunction<TData = object> = (params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals, routeId: string }) => Promise<void>;
+export type LayoutServerDataFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals, routeId: string }) => Promise<object>;
+export type LayoutServerHttpFunction<TData = object> = (params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals, routeId: string }) => Promise<object>;
 
-export type MiddlewareEvent = { request: IncomingMessage; params: Record<string, string>; locals: App.Locals };
+export type MiddlewareEvent = { request: IncomingMessage; params: Record<string, string>; locals: App.Locals, routeId: string };
 export type ResolveFunction = (event: MiddlewareEvent) => Promise<ServerResponse>;
 export type Middleware = (params: { event: MiddlewareEvent; resolve: ResolveFunction; response: ServerResponse }) => Promise<ServerResponse>;
 export type Middlewares = Middleware[];
 
+export type RouteType = 'path' | 'param' | 'group';
+
 export interface RoutePart {
   id: string;
-  parameter: boolean;
+  routeId: string;
+  type: RouteType;
   page?: {
     path: string;
     id: string;
@@ -46,5 +49,6 @@ export interface RoutePart {
     DELETE?: LayoutServerHttpFunction;
   };
   routes: Map<string, RoutePart>;
+  groupRoutes: RoutePart[];
   paramRoute?: RoutePart;
 }

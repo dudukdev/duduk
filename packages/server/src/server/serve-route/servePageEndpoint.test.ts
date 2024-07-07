@@ -25,16 +25,18 @@ afterEach(() => {
 test('serve rendered html root route without layout', async () => {
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -70,17 +72,19 @@ test('serve rendered html root route without layout', async () => {
 test('serve rendered html root route with layout', async () => {
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
     layout: {path: '/__app/routes/layout-hd6e.js', id: 'ftzzt967gi67'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -116,22 +120,24 @@ test('serve rendered html root route with layout', async () => {
 test('serve rendered html root route with layout data', async () => {
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
     layoutServer: {
       data: vi.fn().mockResolvedValue({some: 'layoutData'})
     },
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '');
 
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: ''});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-page-kvzo789t6i7f></fw-page-kvzo789t6i7f>',
@@ -166,19 +172,21 @@ test('serve rendered html root route with layout data', async () => {
 test('serve rendered html root route with page data', async () => {
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
     pageServer: {
       data: async () => ({some: 'pageData'})
     },
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -215,6 +223,8 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
   const mockRouteStack: RoutePart[] = [
     {
       id: '',
+      routeId: '',
+      type: 'path',
       page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
       layout: {path: '/__app/routes/layout-hd6e.js', id: 'ftzzt967gi67'},
       pageServer: {
@@ -223,11 +233,13 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
       layoutServer: {
         data: vi.fn().mockResolvedValue({some: 'layoutData', other: 'data from layout'})
       },
-      parameter: false,
-      routes: new Map()
+      routes: new Map(),
+      groupRoutes: []
     },
     {
       id: 'otherRoute',
+      routeId: '/otherRoute',
+      type: 'path',
       page: {path: '/__app/routes/page-u97z.js', id: 'p7t86fuziuhs'},
       layout: {path: '/__app/routes/layout-63re.js', id: 'lhuo8z7it6ug'},
       pageServer: {
@@ -236,8 +248,8 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
       layoutServer: {
         data: vi.fn().mockResolvedValue({some: 'subLayoutData', more: 'from sub layout'})
       },
-      parameter: false,
-      routes: new Map()
+      routes: new Map(),
+      groupRoutes: []
     }
   ];
   // @ts-ignore
@@ -245,15 +257,15 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '/otherRoute');
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -289,6 +301,8 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
   const mockRouteStack: RoutePart[] = [
     {
       id: '',
+      routeId: '',
+      type: 'path',
       page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
       layout: {path: '/__app/routes/layout-hd6e.js', id: 'ftzzt967gi67'},
       pageServer: {
@@ -297,11 +311,13 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
       layoutServer: {
         data: vi.fn().mockResolvedValue({some: 'layoutData', other: 'data from layout'})
       },
-      parameter: false,
-      routes: new Map()
+      routes: new Map(),
+      groupRoutes: []
     },
     {
       id: 'paramRoute',
+      routeId: '/[paramRoute]',
+      type: 'param',
       page: {path: '/__app/routes/page-u97z.js', id: 'p7t86fuziuhs'},
       layout: {path: '/__app/routes/layout-63re.js', id: 'lhuo8z7it6ug'},
       pageServer: {
@@ -310,8 +326,8 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
       layoutServer: {
         data: vi.fn().mockResolvedValue({some: 'subLayoutData', more: 'from sub layout'})
       },
-      parameter: true,
-      routes: new Map()
+      routes: new Map(),
+      groupRoutes: []
     }
   ];
   // @ts-ignore
@@ -319,15 +335,15 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'}, {some: 'locals'});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'}, {some: 'locals'}, '/[paramRoute]');
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -362,15 +378,17 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
 test('return 500 if no page endpoint specified', async () => {
   const mockRouteStack: RoutePart[] = [{
     id: '',
-    parameter: false,
-    routes: new Map()
+    routeId: '',
+    type: 'path',
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).not.toHaveBeenCalled();
   expect(mockResponse.writeHead).toHaveBeenCalledWith(500);
@@ -390,16 +408,18 @@ test('serve rendered html route with root files', async () => {
 
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -453,9 +473,11 @@ test('serve rendered html route with root files with accept-language with origin
 
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {
@@ -468,7 +490,7 @@ test('serve rendered html route with root files with accept-language with origin
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -522,9 +544,11 @@ test('serve rendered html route with root files with host without referer or ori
 
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {
@@ -536,7 +560,7 @@ test('serve rendered html route with root files with host without referer or ori
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -590,9 +614,11 @@ test('serve rendered html route with root files without referer or origin or hos
 
   const mockRouteStack: RoutePart[] = [{
     id: '',
+    routeId: '',
+    type: 'path',
     page: {path: '/__app/routes/page-asdf.js', id: 'kvzo789t6i7f'},
-    parameter: false,
-    routes: new Map()
+    routes: new Map(),
+    groupRoutes: []
   }];
   // @ts-ignore
   const mockRequest: IncomingMessage = {
@@ -602,7 +628,7 @@ test('serve rendered html route with root files without referer or origin or hos
   // @ts-ignore
   const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {});
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(

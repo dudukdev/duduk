@@ -44,8 +44,10 @@ vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/layoutServer-sh45.js`, (
   PATCH: {},
   DELETE: {}
 }));
-vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/[someParam]/pageServer-al47.js`, () => ({}));
-vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/[someParam]/layoutServer-83t6.js`, () => ({}));
+vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/(myGroup)/pageServer-k8d6.js`, () => ({}));
+vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/(myGroup)/layoutServer-lo97.js`, () => ({}));
+vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/(myGroup)/[someParam]/pageServer-al47.js`, () => ({}));
+vi.mock(`${import.meta.dirname}/__app/routes/otherRoute/(myGroup)/[someParam]/layoutServer-83t6.js`, () => ({}));
 
 beforeEach(() => {
   vi.mocked(uniqueIdFromString).mockReturnValue('uniqueIdFromString');
@@ -65,9 +67,17 @@ beforeEach(() => {
         'pageServer-l37d.js',
         'layout-a53f.js',
         'layoutServer-sh45.js',
+        '(myGroup)'
+      ];
+    } else if ((path as string).endsWith('/__app/routes/otherRoute/(myGroup)')) {
+      return [
+        'page-hd73.js',
+        'pageServer-k8d6.js',
+        'layout-s24f.js',
+        'layoutServer-lo97.js',
         '[someParam]'
       ];
-    } else if ((path as string).endsWith('/__app/routes/otherRoute/[someParam]')) {
+    } else if ((path as string).endsWith('/__app/routes/otherRoute/(myGroup)/[someParam]')) {
       return [
         'page-jd64.js',
         'pageServer-al47.js',
@@ -98,6 +108,8 @@ test('return routes', async () => {
 
   expect(result).toEqual({
     id: '',
+    routeId: '',
+    type: 'path',
     layout: {
       id: 'uniqueIdFromString',
       path: '/__app/routes/layout-hd6e.js'
@@ -122,12 +134,13 @@ test('return routes', async () => {
       PATCH: pageServerQwertz.PATCH,
       DELETE: pageServerQwertz.DELETE,
     },
-    parameter: false,
     routes: new Map([
       [
         'otherRoute',
         {
           id: 'otherRoute',
+          routeId: '/otherRoute',
+          type: 'path',
           layout: {
             id: 'uniqueIdFromString',
             path: '/__app/routes/otherRoute/layout-a53f.js'
@@ -142,25 +155,41 @@ test('return routes', async () => {
             path: '/__app/routes/otherRoute/page-ndu4.js'
           },
           pageServer: {},
-          parameter: false,
           routes: new Map(),
-          paramRoute: {
-            id: 'someParam',
-            layout: {
-              id: 'uniqueIdFromString',
-              path: '/__app/routes/otherRoute/[someParam]/layout-shg4.js'
-            },
-            layoutServer: {},
-            page: {
-              id: 'uniqueIdFromString',
-              path: '/__app/routes/otherRoute/[someParam]/page-jd64.js'
-            },
-            pageServer: {},
-            parameter: true,
-            routes: new Map()
-          }
+          groupRoutes: [
+            {
+              id: 'myGroup',
+              routeId: '/otherRoute/(myGroup)',
+              type: 'group',
+              layout: {
+                id: 'uniqueIdFromString',
+                path: '/__app/routes/otherRoute/(myGroup)/layout-s24f.js'
+              },
+              layoutServer: {},
+              routes: new Map(),
+              groupRoutes: [],
+              paramRoute: {
+                id: 'someParam',
+                routeId: '/otherRoute/(myGroup)/[someParam]',
+                layout: {
+                  id: 'uniqueIdFromString',
+                  path: '/__app/routes/otherRoute/(myGroup)/[someParam]/layout-shg4.js'
+                },
+                layoutServer: {},
+                page: {
+                  id: 'uniqueIdFromString',
+                  path: '/__app/routes/otherRoute/(myGroup)/[someParam]/page-jd64.js'
+                },
+                pageServer: {},
+                type: 'param',
+                routes: new Map(),
+                groupRoutes: []
+              }
+            }
+          ]
         }
       ]
-    ])
+    ]),
+    groupRoutes: []
   });
 });

@@ -6,8 +6,10 @@ import {uniqueIdFromString} from "../unique-ids";
 export async function getRoutes(): Promise<RoutePart> {
   const routes: RoutePart = {
     id: '',
-    parameter: false,
-    routes: new Map()
+    routeId: '',
+    type: 'path',
+    routes: new Map(),
+    groupRoutes: []
   }
 
   await readFolder(`${import.meta.dirname}/__app/routes`, routes);
@@ -21,12 +23,12 @@ async function readFolder(folder: string, routePart: RoutePart): Promise<void> {
     const item = await fsPromise.lstat(itemPath);
     if (item.isFile()) {
       const localItemPath = `/${path.relative(import.meta.dirname, itemPath)}`;
-      if (itemName.startsWith('page-') && itemName.endsWith('.js')) {
+      if (itemName.startsWith('page-') && itemName.endsWith('.js') && routePart.type !== 'group') {
         routePart.page = {
           path: localItemPath,
           id: uniqueIdFromString(localItemPath)
         };
-      } else if (itemName.startsWith('pageServer-') && itemName.endsWith('.js')) {
+      } else if (itemName.startsWith('pageServer-') && itemName.endsWith('.js') && routePart.type !== 'group') {
         routePart.pageServer ??= {};
         const pageServer = await import(itemPath);
         if ('data' in pageServer && typeof pageServer.data === 'function') {
@@ -80,15 +82,29 @@ async function readFolder(folder: string, routePart: RoutePart): Promise<void> {
         const paramName = itemName.substring(1, itemName.length - 1);
         newRoutePart = {
           id: paramName,
-          parameter: true,
-          routes: new Map()
+          routeId: `${routePart.routeId}/${itemName}`,
+          type: 'param',
+          routes: new Map(),
+          groupRoutes: []
         };
         routePart.paramRoute = newRoutePart;
+      } else if (itemName[0] === '(' && itemName[itemName.length - 1] === ')' && itemName.length > 2) {
+        const groupName = itemName.substring(1, itemName.length - 1);
+        newRoutePart = {
+          id: groupName,
+          routeId: `${routePart.routeId}/${itemName}`,
+          type: 'group',
+          routes: new Map(),
+          groupRoutes: []
+        };
+        routePart.groupRoutes.push(newRoutePart);
       } else {
         newRoutePart = {
           id: itemName,
-          parameter: false,
-          routes: new Map()
+          routeId: `${routePart.routeId}/${itemName}`,
+          type: 'path',
+          routes: new Map(),
+          groupRoutes: []
         };
         routePart.routes.set(itemName, newRoutePart);
       }

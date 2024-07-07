@@ -16,6 +16,10 @@ For static routes, i.e. routes with a static name that does not change, create a
 
 To create a dynamic routes, create a folder with square brackets around the name. For example `[myRoute]`. The name inside the brackets acts as parameter name. The actual value of the route parts is injected into the layouts and pages. See the specific chapter down below for more information.
 
+### Route Groups
+
+You can group several routes into special group directories. You can use this for creating different layouts for different routes on the same route-level, or just to structure your routes. To create a route group, create a folder with round brackets around the name. For example `(myGroup)`. A group directory can only include layouts and other routes.
+
 ## Pages
 
 With pages, you visualize content in the browser to your users. A page can consist of multiple parts. The most important part is the page itself. It includes all content that is unique to a specific page. Layouts can include shared content. For example headers, navigation, or footers. In addition, any page or layout can include code that is executed server-side and can provide data to the page or layout, or can accomplish or tasks like access control.

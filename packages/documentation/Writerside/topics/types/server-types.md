@@ -3,7 +3,7 @@
 ## LayoutServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
 ```
 
 Parameter `params`
@@ -19,13 +19,16 @@ Parameter `params`
   `locals: App.Locals`
   : Data cumulated from middlewares
 
+  `routeId: string`
+  : Identifier of the served route, like `"/route/(group)/[param]"`
+
 Return Value
 : Data, that will be merged with the data from the previous layoutServer data functions, and send to the next layoutServer or pageServer data function.
 
 ## LayoutServerHttpFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
 ```
 
 Parameter `params`
@@ -42,6 +45,9 @@ Parameter `params`
   `locals: App.Locals`
   : Data cumulated from middlewares
 
+  `routeId: string`
+  : Identifier of the served route, like `"/route/(group)/[param]"`
+
 Return Value
 : Data, that will be merged with the data from the previous layoutServer HTTP functions, and send to the next layoutServer or pageServer HTTP function.
 
@@ -55,7 +61,7 @@ async function(params: { event: MiddlewareEvent; resolve: ResolveFunction; respo
 ```
 
 Parameter `params`
-: `event: {request: IncomingMessage; params: Record<string, string>; locals: App.Locals}`
+: `event: {request: IncomingMessage; params: Record<string, string>; locals: App.Locals; routeId: string}`
   : Data given to the middleware
 
     `request: IncomingMessage`
@@ -66,6 +72,9 @@ Parameter `params`
 
     `locals: App.Locals`
     : Object in which you can store any data. These data can be accessed by a later middleware or layout data function or page data function.
+
+    `routeId: string`
+    : Identifier of the served route, like `"/route/(group)/[param]"`
   
   `resolve: function(event: MiddlewareEvent) => Promise<ServerResponse>`
   : Function that has to be called to continue the request chain. Pass the `event` parameter as is to this function.
@@ -79,7 +88,7 @@ Return Value
 ## PageServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
 ```
 
 Parameter `params`
@@ -96,13 +105,16 @@ Parameter `params`
   `locals: App.Locals`
   : Data cumulated from middlewares
 
+  `routeId: string`
+  : Identifier of the served route, like `"/route/(group)/[param]"`
+
 Return Value
 : Data, that will be merged with the data from the layoutServer data functions, and send to the page.
 
 ## PageServerHttpFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals }): Promise<void>;
+async function<TData>(params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<void>;
 ```
 
 Parameter `params`
@@ -121,3 +133,5 @@ Parameter `params`
   `locals: App.Locals`
   : Data cumulated from middlewares
 
+  `routeId: string`
+  : Identifier of the served route, like `"/route/(group)/[param]"`
