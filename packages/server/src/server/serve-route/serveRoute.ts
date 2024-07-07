@@ -28,7 +28,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
     const accept = req.headers.accept ?? '';
     switch (matchAcceptHeader(accept, ['text/html', 'application/json'])) {
       case 'text/html':
-        if (requestedMethod === 'GET') {
+        if (requestedMethod === 'GET' || requestedMethod === 'POST') {
           await printPage(req, res, stack, params, locals, routeId);
         } else {
           res.writeHead(405);

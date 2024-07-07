@@ -214,6 +214,22 @@ describe('print page', () => {
     expect(mockResponse.end).not.toHaveBeenCalled();
   });
 
+  test('root, "/", method POST', async () => {
+    // @ts-ignore
+    const mockRequest: IncomingMessage = {url: '/', method: 'POST', headers: {host: 'localhost', accept: 'text/html'}};
+    // @ts-ignore
+    const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+
+    const result = await serveRoute(mockRequest, mockResponse);
+
+    expect(printPage).toHaveBeenCalledOnce();
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '');
+    expect(executeServer).not.toHaveBeenCalled();
+    expect(result).toBeTruthy();
+    expect(mockResponse.writeHead).not.toHaveBeenCalled();
+    expect(mockResponse.end).not.toHaveBeenCalled();
+  });
+
   test('root, "/", no method defined', async () => {
     // @ts-ignore
     const mockRequest: IncomingMessage = {url: '/', headers: {host: 'localhost', accept: 'text/html'}};
@@ -342,7 +358,7 @@ describe('print page', () => {
   });
 
   describe('return 405', () => {
-    test.each(['POST', 'PUT', 'PATCH', 'DELETE'])('if method %s', async (method) => {
+    test.each(['PUT', 'PATCH', 'DELETE'])('if method %s', async (method) => {
       // @ts-ignore
       const mockRequest: IncomingMessage = {url: '/', method, headers: {host: 'localhost', accept: 'text/html'}};
       // @ts-ignore
