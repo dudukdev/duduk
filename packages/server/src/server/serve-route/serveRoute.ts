@@ -5,6 +5,7 @@ import {getRoutes} from "./parseRoutes";
 import {printPage} from "./servePageEndpoint";
 import {executeServer} from "./serveServerEndpoint";
 import {setupServer} from "./rootFiles";
+import {type CookieHandler, createCookieHandler} from "./cookies";
 const rootRoute = await getRoutes();
 
 export async function serveRoute(req: IncomingMessage, res: Parameters<RequestListener>[1]): Promise<boolean> {
@@ -23,13 +24,14 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
   }
 
   const {stack, params, routeId} = stackResult;
+  const cookieHandler = createCookieHandler(req, res);
 
-  await executeMiddlewares(req, res, params, routeId, async (locals) => {
+  await executeMiddlewares(req, res, params, routeId, cookieHandler, async (locals) => {
     const accept = req.headers.accept ?? '';
     switch (matchAcceptHeader(accept, ['text/html', 'application/json'])) {
       case 'text/html':
         if (requestedMethod === 'GET' || requestedMethod === 'POST') {
-          await printPage(req, res, stack, params, locals, routeId);
+          await printPage(req, res, stack, params, locals, routeId, cookieHandler);
         } else {
           res.writeHead(405);
           res.end();
@@ -37,7 +39,7 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
         break;
       case 'application/json':
         if (requestedMethod in (stack[stack.length - 1].pageServer ?? {})) {
-          await executeServer(req, res, stack, params, locals, routeId);
+          await executeServer(req, res, stack, params, locals, routeId, cookieHandler);
         } else {
           res.writeHead(405);
           res.end();
@@ -106,7 +108,7 @@ function getStack(pathParts: string[], part: RoutePart, stack: RoutePart[], para
   }
 }
 
-async function executeMiddlewares(request: IncomingMessage, res: Parameters<RequestListener>[1], params: Record<string, string>, routeId: string, finishExecution: (locals: App.Locals) => Promise<void>) {
+async function executeMiddlewares(request: IncomingMessage, res: Parameters<RequestListener>[1], params: Record<string, string>, routeId: string, cookies: CookieHandler, finishExecution: (locals: App.Locals) => Promise<void>) {
   const middlewares = setupServer?.middlewares;
   if (middlewares !== undefined && middlewares.length > 0) {
     let index = -1;
@@ -114,14 +116,14 @@ async function executeMiddlewares(request: IncomingMessage, res: Parameters<Requ
       index++;
       if (middlewares.length > index) {
         // noinspection ES6RedundantAwait
-        return await middlewares[index]({event: {request, params, locals: {...event.locals}, routeId}, resolve: resolveFunction, response: res});
+        return await middlewares[index]({event: {request, params, locals: {...event.locals}, routeId, cookies}, resolve: resolveFunction, response: res});
       } else {
         await finishExecution({...event.locals});
         return res;
       }
     };
 
-    await resolveFunction({request, params, locals: {}, routeId});
+    await resolveFunction({request, params, locals: {}, routeId, cookies});
   } else {
     await finishExecution({});
   }

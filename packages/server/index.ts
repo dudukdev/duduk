@@ -4,6 +4,7 @@ declare global {
   }
 }
 
+export type {CookieHandler} from './src/server/serve-route/cookies';
 export type {
   PageServerDataFunction,
   PageServerHttpFunction,

@@ -22,6 +22,16 @@ export default defineBuildConfig([
     failOnWarn: process.env.NODE_ENV !== 'test'
   },
   {
+    name: '@duduk/cookies',
+    rootDir: './packages/cookies',
+    entries: ['./index.ts'],
+    declaration: 'node16',
+    externals: [
+      /@duduk\/.*/ug,
+    ],
+    failOnWarn: process.env.NODE_ENV !== 'test'
+  },
+  {
     name: '@duduk/localization',
     rootDir: './packages/localization',
     entries: ['./index.ts'],
@@ -78,6 +88,7 @@ export default defineBuildConfig([
     rollup: {esbuild: {target: 'ESNext'}},
     externals: [
       /@duduk\/.*/ug,
+      '@duduk/cookies',
       'jsdom',
       'mime',
       'esbuild'

@@ -3,6 +3,7 @@ import type {RoutePart} from "./models";
 import {afterEach, beforeEach, expect, test, vi} from "vitest";
 import {printPage} from "./servePageEndpoint";
 import {ssr} from "@duduk/ssr";
+import type {CookieHandler} from "./cookies";
 
 vi.mock('@duduk/ssr', () => ({
   ssr: vi.fn()
@@ -34,9 +35,10 @@ test('serve rendered html root route without layout', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -82,9 +84,10 @@ test('serve rendered html root route with layout', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -132,12 +135,13 @@ test('serve rendered html root route with layout data', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '', mockCookieHandler);
 
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: ''});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: '', cookies: mockCookieHandler});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-page-kvzo789t6i7f></fw-page-kvzo789t6i7f>',
@@ -184,9 +188,10 @@ test('serve rendered html root route with page data', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -255,17 +260,18 @@ test('serve rendered html sub route with layout, sub layout and data', async () 
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/otherRoute'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '/otherRoute');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {some: 'locals'}, '/otherRoute', mockCookieHandler);
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute', cookies: mockCookieHandler});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute', cookies: mockCookieHandler});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute'});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {}, locals: {some: 'locals'}, routeId: '/otherRoute', cookies: mockCookieHandler});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -333,17 +339,18 @@ test('serve rendered html param sub route with layout, sub layout and data', asy
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/someThing'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'}, {some: 'locals'}, '/[paramRoute]');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {paramRoute: 'someThing'}, {some: 'locals'}, '/[paramRoute]', mockCookieHandler);
 
   expect(mockRouteStack[0].pageServer!.data).not.toHaveBeenCalled();
   expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
+  expect(mockRouteStack[0].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]', cookies: mockCookieHandler});
   expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
+  expect(mockRouteStack[1].layoutServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'layoutData', other: 'data from layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]', cookies: mockCookieHandler});
   expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledOnce();
-  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]'});
+  expect(mockRouteStack[1].pageServer!.data).toHaveBeenCalledWith({request: mockRequest, data: {some: 'subLayoutData', other: 'data from layout', more: 'from sub layout'}, params: {paramRoute: 'someThing'}, locals: {some: 'locals'}, routeId: '/[paramRoute]', cookies: mockCookieHandler});
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
     '<fw-layout-ftzzt967gi67><fw-layout-lhuo8z7it6ug><fw-page-p7t86fuziuhs></fw-page-p7t86fuziuhs></fw-layout-lhuo8z7it6ug></fw-layout-ftzzt967gi67>',
@@ -386,9 +393,10 @@ test('return 500 if no page endpoint specified', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).not.toHaveBeenCalled();
   expect(mockResponse.writeHead).toHaveBeenCalledWith(500);
@@ -417,9 +425,10 @@ test('serve rendered html route with root files', async () => {
   // @ts-ignore
   const mockRequest: IncomingMessage = {headers: {referer: 'https://domain.com/'}};
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -488,9 +497,10 @@ test('serve rendered html route with root files with accept-language with origin
     url: '/'
   };
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -558,9 +568,10 @@ test('serve rendered html route with root files with host without referer or ori
     url: '/'
   };
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(
@@ -626,9 +637,10 @@ test('serve rendered html route with root files without referer or origin or hos
     url: '/'
   };
   // @ts-ignore
-  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()}
+  const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+  const mockCookieHandler: CookieHandler = {get: vi.fn(), set: vi.fn()};
 
-  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '');
+  await printPage(mockRequest, mockResponse, mockRouteStack, {}, {}, '', mockCookieHandler);
 
   expect(ssr).toHaveBeenCalledOnce();
   expect(ssr).toHaveBeenCalledWith(

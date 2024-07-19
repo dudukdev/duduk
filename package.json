@@ -17,6 +17,7 @@
   "workspaces": [
     "packages/components",
     "packages/content-negotiation",
+    "packages/cookies",
     "packages/documentation",
     "packages/localization",
     "packages/messaging",

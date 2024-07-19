@@ -1,9 +1,24 @@
 # Server Types
 
+## CookieHandler
+
+```typescript
+export interface CookieHandler {
+  get: (key: string) => string | undefined;
+  set: (cookie: Cookie) => void;
+}
+```
+
+`get: (key: string) => string | undefined`
+: Get a cookie from the request. Returns `undefined` if `key` does not exist.
+
+`set: (cookie: Cookie) => void`
+: Set a cookie in the response.
+
 ## LayoutServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string; cookies: CookieHandler }): Promise<object>;
 ```
 
 Parameter `params`
@@ -22,13 +37,16 @@ Parameter `params`
   `routeId: string`
   : Identifier of the served route, like `"/route/(group)/[param]"`
 
+  `cookies: CookieHandler`
+  : [Helper](#cookiehandler) for handling cookies
+
 Return Value
 : Data, that will be merged with the data from the previous layoutServer data functions, and send to the next layoutServer or pageServer data function.
 
 ## LayoutServerHttpFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string; cookies: CookieHandler }): Promise<object>;
 ```
 
 Parameter `params`
@@ -48,6 +66,9 @@ Parameter `params`
   `routeId: string`
   : Identifier of the served route, like `"/route/(group)/[param]"`
 
+  `cookies: CookieHandler`
+  : [Helper](#cookiehandler) for handling cookies
+
 Return Value
 : Data, that will be merged with the data from the previous layoutServer HTTP functions, and send to the next layoutServer or pageServer HTTP function.
 
@@ -61,7 +82,7 @@ async function(params: { event: MiddlewareEvent; resolve: ResolveFunction; respo
 ```
 
 Parameter `params`
-: `event: {request: IncomingMessage; params: Record<string, string>; locals: App.Locals; routeId: string}`
+: `event: {request: IncomingMessage; params: Record<string, string>; locals: App.Locals; routeId: string; cookies: CookieHandler}`
   : Data given to the middleware
 
     `request: IncomingMessage`
@@ -75,6 +96,9 @@ Parameter `params`
 
     `routeId: string`
     : Identifier of the served route, like `"/route/(group)/[param]"`
+    
+    `cookies: CookieHandler`
+    : [Helper](#cookiehandler) for handling cookies
   
   `resolve: function(event: MiddlewareEvent) => Promise<ServerResponse>`
   : Function that has to be called to continue the request chain. Pass the `event` parameter as is to this function.
@@ -88,7 +112,7 @@ Return Value
 ## PageServerDataFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<object>;
+async function<TData>(params: { request: IncomingMessage; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string; cookies: CookieHandler }): Promise<object>;
 ```
 
 Parameter `params`
@@ -108,13 +132,16 @@ Parameter `params`
   `routeId: string`
   : Identifier of the served route, like `"/route/(group)/[param]"`
 
+  `cookies: CookieHandler`
+  : [Helper](#cookiehandler) for handling cookies
+
 Return Value
 : Data, that will be merged with the data from the layoutServer data functions, and send to the page.
 
 ## PageServerHttpFunction
 
 ```typescript
-async function<TData>(params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string }): Promise<void>;
+async function<TData>(params: { request: IncomingMessage; response: ServerResponse; data: TData; params: Record<string, string>; locals: App.Locals; routeId: string; cookies: CookieHandler }): Promise<void>;
 ```
 
 Parameter `params`
@@ -135,3 +162,6 @@ Parameter `params`
 
   `routeId: string`
   : Identifier of the served route, like `"/route/(group)/[param]"`
+
+  `cookies: CookieHandler`
+  : [Helper](#cookiehandler) for handling cookies

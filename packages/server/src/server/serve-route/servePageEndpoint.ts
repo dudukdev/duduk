@@ -1,5 +1,6 @@
-import type {RoutePart} from "./models";
 import type {IncomingMessage, RequestListener} from "node:http";
+import type {CookieHandler} from "./cookies";
+import type {RoutePart} from "./models";
 import {parseHeader} from "@duduk/content-negotiation";
 import {appCss, getLocaleStrings, rootCss, setupClient} from "./rootFiles";
 import {ssr} from "@duduk/ssr";
@@ -11,12 +12,12 @@ interface Globals {
   locales?: Record<string, string | Record<string, string>>;
 }
 
-export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals, routeId: string): Promise<void> {
+export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals, routeId: string, cookies: CookieHandler): Promise<void> {
   const layouts: { path: string; id: string }[] = [];
   let cumulatedData = {};
   for (const routePart of stack) {
     if (routePart.layoutServer?.data !== undefined) {
-      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req, data: cumulatedData, params, locals, routeId})}
+      cumulatedData = {...cumulatedData, ...await routePart.layoutServer.data({request: req, data: cumulatedData, params, locals, routeId, cookies})}
     }
     if (routePart.layout !== undefined) {
       layouts.push({
@@ -31,7 +32,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
     res.end('500 Internal Server Error');
     return;
   }
-  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData, params, locals, routeId}) : {}}
+  cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData, params, locals, routeId, cookies}) : {}}
   const page = {
     path: lastPart.page.path,
     id: lastPart.page.id
