@@ -10,6 +10,9 @@ const requestListener: RequestListener = async function (req, res) {
 
   const routeServed = await serveRoute(req, res);
   if (routeServed) {
+    if (!res.writableEnded) {
+      res.end();
+    }
     return;
   }
 

@@ -80,7 +80,8 @@ test('only serve file if serveFile returns true', async () => {
   };
   const mockResponse = {
     writeHead: vi.fn(),
-    end: vi.fn()
+    end: vi.fn(),
+    writableEnded: true
   };
 
   await import('./server');
@@ -104,7 +105,8 @@ test('serve route if serveFile returns false and serveRoute returns true', async
   };
   const mockResponse = {
     writeHead: vi.fn(),
-    end: vi.fn()
+    end: vi.fn(),
+    writableEnded: true
   };
 
   await import('./server');
@@ -120,6 +122,32 @@ test('serve route if serveFile returns false and serveRoute returns true', async
   expect(mockResponse.end).not.toHaveBeenCalled();
 });
 
+test('serve route and end response if serveFile returns false and serveRoute returns true but response not ended yet', async () => {
+  vi.mocked(serveFile).mockReturnValue(false);
+  vi.mocked(serveRoute).mockResolvedValue(true);
+  const mockRequest = {
+    url: '/some/file.js',
+    method: 'GET'
+  };
+  const mockResponse = {
+    writeHead: vi.fn(),
+    end: vi.fn(),
+    writableEnded: false
+  };
+
+  await import('./server');
+
+  const listener = vi.mocked(createServer).mock.lastCall![0] as Function;
+  await listener(mockRequest, mockResponse);
+
+  expect(serveFile).toHaveBeenCalledOnce();
+  expect(serveFile).toHaveBeenCalledWith(mockRequest, mockResponse);
+  expect(serveRoute).toHaveBeenCalledOnce();
+  expect(serveRoute).toHaveBeenCalledWith(mockRequest, mockResponse);
+  expect(mockResponse.writeHead).not.toHaveBeenCalled();
+  expect(mockResponse.end).toHaveBeenCalledOnce();
+});
+
 test('write 404 if serveFile and serveRoute return false', async () => {
   vi.mocked(serveFile).mockReturnValue(false);
   vi.mocked(serveRoute).mockResolvedValue(false);
@@ -129,7 +157,8 @@ test('write 404 if serveFile and serveRoute return false', async () => {
   };
   const mockResponse = {
     writeHead: vi.fn(),
-    end: vi.fn()
+    end: vi.fn(),
+    writableEnded: true
   };
 
   await import('./server');
