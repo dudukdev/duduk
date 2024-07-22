@@ -28,9 +28,9 @@
     "@stryker-mutator/core": "^8.2.6",
     "@stryker-mutator/vitest-runner": "^8.2.6",
     "@types/node": "^20.14.11",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@vitest/coverage-v8": "^2.0.4",
     "typescript": "^5.5.3",
     "unbuild": "^2.0.0",
-    "vitest": "^1.6.0"
+    "vitest": "^2.0.4"
   }
 }
