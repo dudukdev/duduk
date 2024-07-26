@@ -28,26 +28,31 @@ export async function serveRoute(req: IncomingMessage, res: Parameters<RequestLi
 
   await executeMiddlewares(req, res, params, routeId, cookieHandler, async (locals) => {
     const accept = req.headers.accept ?? '';
-    switch (matchAcceptHeader(accept, ['text/html', 'application/json'])) {
-      case 'text/html':
-        if (requestedMethod === 'GET' || requestedMethod === 'POST') {
-          await printPage(req, res, stack, params, locals, routeId, cookieHandler);
+
+    const matchHtml = matchAcceptHeader(accept, ['text/html']) !== undefined;
+    const matchJson = matchAcceptHeader(accept, ['application/json']) !== undefined;
+
+    if (!matchHtml && !matchJson) {
+      res.writeHead(406);
+      res.end();
+    } else {
+      let served = false;
+      if ((requestedMethod === 'GET' || requestedMethod === 'POST') && matchHtml) {
+        served = await printPage(req, res, stack, params, locals, routeId, cookieHandler);
+      }
+      if (!served) {
+        if (matchJson) {
+          if (requestedMethod in (stack[stack.length - 1].pageServer ?? {})) {
+            await executeServer(req, res, stack, params, locals, routeId, cookieHandler);
+          } else {
+            res.writeHead(405);
+            res.end();
+          }
         } else {
           res.writeHead(405);
           res.end();
         }
-        break;
-      case 'application/json':
-        if (requestedMethod in (stack[stack.length - 1].pageServer ?? {})) {
-          await executeServer(req, res, stack, params, locals, routeId, cookieHandler);
-        } else {
-          res.writeHead(405);
-          res.end();
-        }
-        break;
-      default:
-        res.writeHead(406);
-        res.end();
+      }
     }
   });
 

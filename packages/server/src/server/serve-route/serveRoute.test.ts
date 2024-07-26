@@ -9,18 +9,29 @@ import {printPage} from "./servePageEndpoint";
 import {executeServer} from "./serveServerEndpoint";
 
 /*
-/                                        (with Layout, with Page)
-/subRoute                                (without Layout, with Page)
-/subRoute/subSubRoute                    (with Layout, with Page)
-/otherRoute                              (with Layout, without Page)
-/otherRoute/(otherGroup)                 (without Layout)
-/otherRoute/(otherGroup)/otherSubRoute   (with Layout, with Page)
-/otherRoute/[someParam]                  (with Layout, with Page)
-/(myGroup)                               (with Layout)
-/(myGroup)/moreRoute                     (with Layout, with Page, without PageServer)
+/                                        (Layout, Page, PageServer)
+/subRoute                                (Page, PageServer)
+/subRoute/subSubRoute                    (Layout, Page, PageServer)
+/otherRoute                              (Layout)
+/otherRoute/(otherGroup)                 ()
+/otherRoute/(otherGroup)/otherSubRoute   (Layout, Page, PageServer)
+/otherRoute/[someParam]                  (Layout, Page, PageServer)
+/(myGroup)                               (Layout)
+/(myGroup)/moreRoute                     (Layout, Page)
+/serverRoute                             (PageServer)
  */
 
-const {mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOtherRoute, mockMoreRoute, mockMyGroup, mockRootRoute} = vi.hoisted(() => {
+const {mockServerRoute, mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOtherRoute, mockMoreRoute, mockMyGroup, mockRootRoute} = vi.hoisted(() => {
+  const mockServerRoute: RoutePart = {
+    id: 'serverRoute',
+    routeId: '/serverRoute',
+    type: 'path',
+    pageServer: {
+      GET: vi.fn()
+    },
+    routes: new Map(),
+    groupRoutes: []
+  };
   const mockParamRoute: RoutePart = {
     id: 'someParam',
     routeId: '/otherRoute/[someParam]',
@@ -160,11 +171,12 @@ const {mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOth
     },
     routes: new Map([
       ['subRoute', mockSubRoute],
-      ['otherRoute', mockOtherRoute]
+      ['otherRoute', mockOtherRoute],
+      ['serverRoute', mockServerRoute]
     ]),
     groupRoutes: [mockMyGroup]
   };
-  return {mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOtherRoute, mockMoreRoute, mockMyGroup, mockRootRoute};
+  return {mockServerRoute, mockParamRoute, mockSubSubRoute, mockSubRoute, mockOtherSubRoute, mockOtherRoute, mockMoreRoute, mockMyGroup, mockRootRoute};
 });
 const mockSetupServer: {middlewares: Middlewares | undefined} = vi.hoisted(() => ({
   middlewares: undefined
@@ -193,6 +205,7 @@ vi.mock('./cookies', () => ({
 }));
 
 beforeEach(() => {
+  vi.mocked(printPage).mockResolvedValue(true);
   vi.mocked(fsPromise.readdir).mockResolvedValue([]);
   vi.mocked(getRoutes).mockResolvedValue(mockRootRoute);
   mockSetupServer.middlewares = undefined;
@@ -532,6 +545,41 @@ describe('execute server', () => {
 
     expect(executeServer).not.toHaveBeenCalled();
     expect(printPage).not.toHaveBeenCalled();
+    expect(result).toBeTruthy();
+    expect(mockResponse.writeHead).toHaveBeenCalledWith(405);
+    expect(mockResponse.end).toHaveBeenCalledOnce();
+  });
+
+  test('fallback from printPage to executeServer', async () => {
+    // @ts-ignore
+    const mockRequest: IncomingMessage = {url: '/serverRoute', method: 'GET', headers: {host: 'localhost', accept: 'text/html, */*'}};
+    // @ts-ignore
+    const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+    vi.mocked(printPage).mockResolvedValue(false);
+
+    const result = await serveRoute(mockRequest, mockResponse);
+
+    expect(printPage).toHaveBeenCalledOnce();
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockServerRoute], {}, {}, '/serverRoute', mockCookieHandler);
+    expect(executeServer).toHaveBeenCalledOnce();
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockServerRoute], {}, {}, '/serverRoute', mockCookieHandler);
+    expect(result).toBeTruthy();
+    expect(mockResponse.writeHead).not.toHaveBeenCalled();
+    expect(mockResponse.end).not.toHaveBeenCalled();
+  });
+
+  test('return 405 if fallback from printPage to executeServer but method not defined', async () => {
+    // @ts-ignore
+    const mockRequest: IncomingMessage = {url: '/serverRoute', method: 'POST', headers: {host: 'localhost', accept: 'text/html, */*'}};
+    // @ts-ignore
+    const mockResponse: Parameters<RequestListener>[1] = {writeHead: vi.fn(), end: vi.fn()};
+    vi.mocked(printPage).mockResolvedValue(false);
+
+    const result = await serveRoute(mockRequest, mockResponse);
+
+    expect(printPage).toHaveBeenCalledOnce();
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute, mockServerRoute], {}, {}, '/serverRoute', mockCookieHandler);
+    expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).toHaveBeenCalledWith(405);
     expect(mockResponse.end).toHaveBeenCalledOnce();

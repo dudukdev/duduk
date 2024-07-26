@@ -12,7 +12,7 @@ interface Globals {
   locales?: Record<string, string | Record<string, string>>;
 }
 
-export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals, routeId: string, cookies: CookieHandler): Promise<void> {
+export async function printPage(req: IncomingMessage, res: Parameters<RequestListener>[1], stack: RoutePart[], params: Record<string, string>, locals: App.Locals, routeId: string, cookies: CookieHandler): Promise<boolean> {
   const layouts: { path: string; id: string }[] = [];
   let cumulatedData = {};
   for (const routePart of stack) {
@@ -28,9 +28,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
   }
   const lastPart = stack[stack.length - 1];
   if (lastPart.page === undefined) {
-    res.writeHead(500);
-    res.end('500 Internal Server Error');
-    return;
+    return false;
   }
   cumulatedData = {...cumulatedData, ...lastPart.pageServer?.data !== undefined ? await lastPart.pageServer.data({request: req, data: cumulatedData, params, locals, routeId, cookies}) : {}}
   const page = {
@@ -39,6 +37,7 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
   }
 
   await render(req, res, cumulatedData, layouts, page, params);
+  return true;
 }
 
 async function render(req: IncomingMessage, res: Parameters<RequestListener>[1], data: object, layouts: { path: string; id: string }[], page: { path: string; id: string }, params: Record<string, string>): Promise<void> {
