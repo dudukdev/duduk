@@ -20,9 +20,13 @@ export default defineConfig({
       ],
       reportOnFailure: true,
       exclude: [
+        'build.config.ts',
+        '**/vitest.config.ts',
         'vitest.workspace.ts',
         'stryker.config.js',
-        'packages/server/src/server/serve-route/__app/**'
+        '**/dist/**',
+        '**/*.test.ts',
+        'packages/ssr/src/__app/**'
       ]
     }
   },

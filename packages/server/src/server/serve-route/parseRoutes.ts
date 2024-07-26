@@ -6,7 +6,7 @@ import {uniqueIdFromString} from "../unique-ids";
 export async function getRoutes(): Promise<RoutePart> {
   const routes: RoutePart = {
     id: '',
-    routeId: '',
+    routeId: '/',
     type: 'path',
     routes: new Map(),
     groupRoutes: []
@@ -78,11 +78,12 @@ async function readFolder(folder: string, routePart: RoutePart): Promise<void> {
       }
     } else if (item.isDirectory()) {
       let newRoutePart: RoutePart;
+      const parentRouteId = routePart.routeId === '/' ? '' : routePart.routeId;
       if (itemName[0] === '[' && itemName[itemName.length - 1] === ']' && itemName.length > 2) {
         const paramName = itemName.substring(1, itemName.length - 1);
         newRoutePart = {
           id: paramName,
-          routeId: `${routePart.routeId}/${itemName}`,
+          routeId: `${parentRouteId}/${itemName}`,
           type: 'param',
           routes: new Map(),
           groupRoutes: []
@@ -92,7 +93,7 @@ async function readFolder(folder: string, routePart: RoutePart): Promise<void> {
         const groupName = itemName.substring(1, itemName.length - 1);
         newRoutePart = {
           id: groupName,
-          routeId: `${routePart.routeId}/${itemName}`,
+          routeId: `${parentRouteId}/${itemName}`,
           type: 'group',
           routes: new Map(),
           groupRoutes: []
@@ -101,7 +102,7 @@ async function readFolder(folder: string, routePart: RoutePart): Promise<void> {
       } else {
         newRoutePart = {
           id: itemName,
-          routeId: `${routePart.routeId}/${itemName}`,
+          routeId: `${parentRouteId}/${itemName}`,
           type: 'path',
           routes: new Map(),
           groupRoutes: []

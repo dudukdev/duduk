@@ -108,7 +108,7 @@ test('return routes', async () => {
 
   expect(result).toEqual({
     id: '',
-    routeId: '',
+    routeId: '/',
     type: 'path',
     layout: {
       id: 'uniqueIdFromString',

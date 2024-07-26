@@ -155,7 +155,7 @@ const {mockServerRoute, mockParamRoute, mockSubSubRoute, mockSubRoute, mockOther
   };
   const mockRootRoute: RoutePart = {
     id: '',
-    routeId: '',
+    routeId: '/',
     type: 'path',
     layout: {
       id: 'uniqueIdFromString',
@@ -225,7 +225,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '', mockCookieHandler);
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '/', mockCookieHandler);
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -241,7 +241,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '', mockCookieHandler);
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '/', mockCookieHandler);
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -257,7 +257,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '', mockCookieHandler);
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '/', mockCookieHandler);
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -273,7 +273,7 @@ describe('print page', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(printPage).toHaveBeenCalledOnce();
-    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '', mockCookieHandler);
+    expect(printPage).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '/', mockCookieHandler);
     expect(executeServer).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
@@ -434,7 +434,7 @@ describe('execute server', () => {
     const result = await serveRoute(mockRequest, mockResponse);
 
     expect(executeServer).toHaveBeenCalledOnce();
-    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '', mockCookieHandler);
+    expect(executeServer).toHaveBeenCalledWith(mockRequest, mockResponse, [mockRootRoute], {}, {}, '/', mockCookieHandler);
     expect(printPage).not.toHaveBeenCalled();
     expect(result).toBeTruthy();
     expect(mockResponse.writeHead).not.toHaveBeenCalled();
