@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import {JSDOM} from 'jsdom';
+import {setupJSDOMWindow} from "./jsdomWindow";
 
 export async function ssr(html: string, js: string, globals: Record<string, any>, languages: string[], url: string): Promise<string> {
   const customElementsTagNames: string[] = [];
@@ -22,6 +23,8 @@ export async function ssr(html: string, js: string, globals: Record<string, any>
       });
     }
   });
+  setupJSDOMWindow(jsdom);
+
   const context = vm.createContext(jsdom.window);
 
   const sourceTextModule = new vm.SourceTextModule(js, {context});
