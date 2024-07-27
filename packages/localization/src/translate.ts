@@ -6,12 +6,17 @@ import type {AcceptLocale} from "./data";
 type Plural = number | Record<string, number>;
 type Variables = Record<string, string | number>;
 
-export function t(id: string, options?: {plural?: Plural, variables?: Variables, locale?: AcceptLocale}): string {
+export function t(id: string, options?: {plural?: Plural, variables?: Variables, locale?: AcceptLocale, routeId?: string}): string {
   options ??= {};
   return translate(id, {locale: defaultLanguages(), ...options}) ?? id;
 }
 
-export function translate(id: string, options: {plural?: Plural, variables?: Variables, locale: AcceptLocale}): string | undefined {
+export function translate(id: string, options: {plural?: Plural, variables?: Variables, locale: AcceptLocale, routeId?: string}): string | undefined {
+  const routeId = options.routeId ?? (typeof window !== 'undefined' ? window.__duduk?.routeId : undefined);
+  if (id.startsWith('$route.') && routeId !== undefined) {
+    id = `@routes.${routeId}.${id.substring(7)}`;
+  }
+
   const {strings, locale} = localeStrings(options.locale);
   if (id in strings) {
     const stringValue = strings[id];

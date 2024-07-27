@@ -6,6 +6,7 @@ import {appCss, getLocaleStrings, rootCss, setupClient} from "./rootFiles";
 import {ssr} from "@duduk/ssr";
 
 interface Globals {
+  routeId: string;
   pageData: object;
   pageParams: Record<string, string>;
   prependStyles: string | undefined;
@@ -36,11 +37,11 @@ export async function printPage(req: IncomingMessage, res: Parameters<RequestLis
     id: lastPart.page.id
   }
 
-  await render(req, res, cumulatedData, layouts, page, params);
+  await render(req, res, cumulatedData, layouts, page, params, routeId);
   return true;
 }
 
-async function render(req: IncomingMessage, res: Parameters<RequestListener>[1], data: object, layouts: { path: string; id: string }[], page: { path: string; id: string }, params: Record<string, string>): Promise<void> {
+async function render(req: IncomingMessage, res: Parameters<RequestListener>[1], data: object, layouts: { path: string; id: string }[], page: { path: string; id: string }, params: Record<string, string>, routeId: string): Promise<void> {
   const renderedPage = await renderPage(page);
 
   const imports: string[] = [renderedPage.import];
@@ -60,6 +61,7 @@ async function render(req: IncomingMessage, res: Parameters<RequestListener>[1],
   customElementsDefines.reverse();
 
   const globals: Globals = {
+    routeId,
     pageData: data,
     pageParams: params,
     prependStyles: appCss !== undefined ? `@import url("${appCss}");` : undefined

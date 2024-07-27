@@ -1,4 +1,4 @@
-import {beforeEach, describe, expect, test, vi} from "vitest";
+import {afterEach, beforeEach, describe, expect, test, vi} from "vitest";
 import {data} from "./data";
 import {t, translate} from "./translate";
 import {defaultLanguages} from "./defaultLanguage";
@@ -27,13 +27,19 @@ beforeEach(() => {
     pluralIncomplete: {
       'count:one': '{count} apple',
     },
-    onlyEng: 'Another text'
+    onlyEng: 'Another text',
+    '@routes./myRoute.text': 'This is a route text',
+    '@routes./otherRoute.text': 'This is another route text'
   });
   data.strings.set('de', {
     simple: 'Das ist ein Text',
     withVar: 'Das ist ein {val} Text',
   });
   data.defaultLocale = 'en';
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
 });
 
 describe('t()', () => {
@@ -151,6 +157,43 @@ describe('translate()', () => {
       expect(result0).toEqual('0 apples and 0 horses');
       expect(result1).toEqual('1 apple and 1 horse');
       expect(result2).toEqual('2 apples and 2 horses');
+    });
+  });
+
+  describe('$route', () => {
+    test('return route string from routeId from globals', () => {
+      vi.stubGlobal('window', {
+        __duduk: {routeId: '/myRoute'}
+      });
+      const result = translate('$route.text', {locale: 'en'});
+      expect(result).toEqual('This is a route text');
+    });
+
+    test('return route string from routeId from options instead of globals', () => {
+      vi.stubGlobal('window', {
+        __duduk: {routeId: '/myRoute'}
+      });
+      const result = translate('$route.text', {locale: 'en', routeId: '/otherRoute'});
+      expect(result).toEqual('This is another route text');
+    });
+
+    test('return undefined on $route if window not defined', () => {
+      const result = translate('$route.text', {locale: 'en'});
+      expect(result).toBeUndefined();
+    });
+
+    test('return undefined on $route if __duduk not defined', () => {
+      vi.stubGlobal('window', {});
+      const result = translate('$route.text', {locale: 'en'});
+      expect(result).toBeUndefined();
+    });
+
+    test('return undefined on $route if __duduk.routeId not defined', () => {
+      vi.stubGlobal('window', {
+        __duduk: {}
+      });
+      const result = translate('$route.text', {locale: 'en'});
+      expect(result).toBeUndefined();
     });
   });
 });
