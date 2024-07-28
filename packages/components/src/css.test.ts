@@ -1,5 +1,9 @@
 import {css} from "./css";
-import {expect, test} from "vitest";
+import {beforeEach, expect, test} from "vitest";
+
+beforeEach(() => {
+  window.__duduk = undefined;
+});
 
 test("return correct styles", async () => {
   const styles = css`
@@ -9,7 +13,7 @@ test("return correct styles", async () => {
   `;
 
   expect(styles instanceof HTMLStyleElement).toBeTruthy();
-  expect(styles.textContent).toEqual(`
+  expect(styles!.textContent).toEqual(`
     .something {
       color: red;
     }
@@ -25,7 +29,7 @@ test("return correct styles if it contains variables", async () => {
   `;
 
   expect(styles instanceof HTMLStyleElement).toBeTruthy();
-  expect(styles.textContent).toEqual(`
+  expect(styles!.textContent).toEqual(`
     .something {
       color: red;
     }
@@ -44,10 +48,15 @@ test("return correct styles if 'prependStyles' is set", async () => {
   `;
 
   expect(styles instanceof HTMLStyleElement).toBeTruthy();
-  expect(styles.textContent).toEqual(`.prependStyles {font-size: 1em}
+  expect(styles!.textContent).toEqual(`.prependStyles {font-size: 1em}
 
     .something {
       color: red;
     }
   `);
+});
+
+test('return undefined if styles are empty', () => {
+  const styles = css``;
+  expect(styles).toBeUndefined();
 });

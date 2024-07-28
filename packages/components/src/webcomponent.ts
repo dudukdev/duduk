@@ -1,3 +1,5 @@
+import {css} from "./css";
+
 export type ApplyTemplateResult = {
     childNodes: ChildNode[];
     getElement: <T extends HTMLElement = HTMLElement>(refName: string) => (T | undefined);
@@ -27,7 +29,7 @@ export class WebComponent extends HTMLElement {
 
         if (!this.shadowRoot) {
             const template = new.target.template;
-            const styles = new.target.styles;
+            const styles = new.target.styles ?? css``;
 
             this.attachShadow({mode: 'open'});
             if (styles !== undefined) {

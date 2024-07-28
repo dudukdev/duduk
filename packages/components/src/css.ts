@@ -1,4 +1,4 @@
-export function css(strings: TemplateStringsArray, ...values: any[]): HTMLStyleElement {
+export function css(strings: TemplateStringsArray, ...values: any[]): HTMLStyleElement | undefined {
   let result = strings[0];
   for (let i = 1; i < strings.length; i++) {
     result += values[i - 1] + strings[i];
@@ -8,5 +8,5 @@ export function css(strings: TemplateStringsArray, ...values: any[]): HTMLStyleE
     result = `${window.__duduk.prependStyles}\n${result}`;
   }
   styleElement.append(result);
-  return styleElement;
+  return result !== '' ? styleElement : undefined;
 }
