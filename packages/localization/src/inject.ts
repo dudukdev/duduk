@@ -11,25 +11,35 @@ export function injectI18n(parent: HTMLElement): void {
     attributes: Record<string, string>
   }[] = [];
 
-  for (const element of parent.shadowRoot.querySelectorAll('*')) {
-    let content: string | undefined = undefined;
-    let attributes: Record<string, string> = {};
+  const walker = (elements: NodeListOf<Element>) => {
 
-    for (const attribute of element.attributes) {
-      if (attribute.name === 'data-i18n') {
-        content = element.textContent!;
-      } else if (attribute.name.startsWith('data-i18n-')) {
-        const attributeName = attribute.name.substring(10);
-        if (element.hasAttribute(attributeName)) {
-          attributes[attributeName] = element.getAttribute(attributeName)!;
+    for (const element of elements) {
+      let content: string | undefined = undefined;
+      let attributes: Record<string, string> = {};
+
+      for (const attribute of element.attributes) {
+        if (attribute.name === 'data-i18n') {
+          content = element.textContent!;
+        } else if (attribute.name.startsWith('data-i18n-')) {
+          const attributeName = attribute.name.substring(10);
+          if (element.hasAttribute(attributeName)) {
+            attributes[attributeName] = element.getAttribute(attributeName)!;
+          }
         }
+      }
+
+      if (content !== undefined || Object.keys(attributes).length > 0) {
+        i18nElements.push({element, content, attributes});
+      }
+
+      if (element instanceof HTMLTemplateElement) {
+        walker(element.content.querySelectorAll('*'));
       }
     }
 
-    if (content !== undefined || Object.keys(attributes).length > 0) {
-      i18nElements.push({element, content, attributes});
-    }
-  }
+  };
+
+  walker(parent.shadowRoot.querySelectorAll('*'));
 
   for (const i18nElement of i18nElements) {
     if (i18nElement.content !== undefined) {

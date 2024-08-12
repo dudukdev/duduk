@@ -3,7 +3,6 @@ import {beforeEach, expect, test, vi} from "vitest";
 import {data} from "./data";
 import {defaultLanguages} from "./defaultLanguage";
 import {WebComponent} from "@duduk/components/src/webcomponent";
-import {html} from "@duduk/components/src/html";
 import {injectI18n} from "./inject";
 
 vi.mock('./defaultLanguage', () => ({defaultLanguages: vi.fn()}));
@@ -41,6 +40,30 @@ test('inject translation into shadow dom element attribute', () => {
   injectI18n(element);
 
   expect(element.shadowRoot?.innerHTML).toEqual('<p title="This is a text"></p>');
+});
+
+test('inject translation into template element inside shadow dom', () => {
+  const Component = class extends WebComponent {};
+  window.customElements.define(`test-component-${counter}`, Component);
+  const element = new Component();
+
+  element.shadowRoot!.innerHTML = '<template><p data-i18n>i18nId</p></template>';
+
+  injectI18n(element);
+
+  expect(element.shadowRoot?.innerHTML).toEqual('<template><p>This is a text</p></template>');
+});
+
+test('inject translation into template element attribute inside shadow dom', () => {
+  const Component = class extends WebComponent {};
+  window.customElements.define(`test-component-${counter}`, Component);
+  const element = new Component();
+
+  element.shadowRoot!.innerHTML = '<template><p data-i18n-title title="i18nId"></p></template>';
+
+  injectI18n(element);
+
+  expect(element.shadowRoot?.innerHTML).toEqual('<template><p title="This is a text"></p></template>');
 });
 
 test('do not change other than shadow dom', () => {
