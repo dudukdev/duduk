@@ -12,10 +12,10 @@ static properties = {
 type Properties = Record<string, { type: String | Boolean | Number | Object }>;
 ```
 
-To get the value of a property, add a setter method to your component class.
+To get the value of a property, add a setter method to your component class. Add an underscore `_` in front of the property name as name for the setter.
 
 ```typescript
-set myProperty(value: string | null) {
+set _myProperty(value: string | null) {
     // custom code
 }
 ```
@@ -41,7 +41,7 @@ static properties = {
     myProperty: {type: String}
 };
 
-set myProperty(value: string | null) {
+set _myProperty(value: string | null) {
     // custom code
 }
 ```
@@ -59,7 +59,7 @@ static properties = {
     myProperty: {type: Boolean}
 };
 
-set myProperty(value: boolean) {
+set _myProperty(value: boolean) {
     // custom code
 }
 ```
@@ -76,7 +76,7 @@ static properties = {
     myProperty: {type: Number}
 };
 
-set myProperty(value: number | null) {
+set _myProperty(value: number | null) {
     // custom code
 }
 ```
@@ -94,7 +94,7 @@ static properties = {
     myProperty: {type: Object}
 };
 
-set myProperty(value: object | null) { // object, array, or anything you want
+set _myProperty(value: object | null) { // object, array, or anything you want
     // custom code
 }
 ```

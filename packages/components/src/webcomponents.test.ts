@@ -79,38 +79,99 @@ describe('properties', () => {
         myProp: {type: String}
       };
     };
-    expect(Component.observedAttributes).toEqual(['myProp']);
+    expect(Component.observedAttributes).toEqual(['myprop']);
   });
 
-  test('call setter via instance property', () => {
-    const setterFn = vi.fn();
-    const Component = class extends WebComponent {
-      static properties = {
-        myProp: {type: String}
-      };
-      set myProp(value: string | null) {
-        setterFn(value);
-      }
-    };
-    window.customElements.define(`test-component-${counter}`, Component);
-
-    const component = new Component();
-    component.myProp = 'hello world';
-
-    expect(setterFn).toHaveBeenCalledOnce();
-    expect(setterFn).toHaveBeenCalledWith('hello world');
-  });
-
-  describe('call setter via setAttribute and removeAttribute', () => {
-    // Fails because it seems that JSDOM does not support attributeChangedCallback
-
-    test.fails('String property', () => {
+  describe('getter and setter via instance property', () => {
+    test('String property', () => {
       const setterFn = vi.fn();
       const Component = class extends WebComponent {
         static properties = {
           myProp: {type: String}
         };
-        set myProp(value: string | null) {
+        set _myProp(value: string | null) {
+          setterFn(value);
+        }
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+
+      const component = new Component();
+      component.myProp = 'hello world';
+
+      expect(setterFn).toHaveBeenCalledOnce();
+      expect(setterFn).toHaveBeenCalledWith('hello world');
+      expect(component.myProp).toEqual('hello world');
+    });
+
+    test('Number property', () => {
+      const setterFn = vi.fn();
+      const Component = class extends WebComponent {
+        static properties = {
+          myProp: {type: Number}
+        };
+        set _myProp(value: number | null) {
+          setterFn(value);
+        }
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+
+      const component = new Component();
+      component.myProp = 42;
+
+      expect(setterFn).toHaveBeenCalledOnce();
+      expect(setterFn).toHaveBeenCalledWith(42);
+      expect(component.myProp).toEqual(42);
+    });
+
+    test('Boolean property', () => {
+      const setterFn = vi.fn();
+      const Component = class extends WebComponent {
+        static properties = {
+          myProp: {type: Boolean}
+        };
+        set _myProp(value: boolean) {
+          setterFn(value);
+        }
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+
+      const component = new Component();
+      component.myProp = true;
+
+      expect(setterFn).toHaveBeenCalledOnce();
+      expect(setterFn).toHaveBeenCalledWith(true);
+      expect(component.myProp).toEqual(true);
+    });
+
+    test('Object property', () => {
+      const setterFn = vi.fn();
+      const Component = class extends WebComponent {
+        static properties = {
+          myProp: {type: Object}
+        };
+        set _myProp(value: object) {
+          setterFn(value);
+        }
+      };
+      window.customElements.define(`test-component-${counter}`, Component);
+
+      const component = new Component();
+      component.myProp = {foo: 'bar'};
+
+      expect(setterFn).toHaveBeenCalledOnce();
+      expect(setterFn).toHaveBeenCalledWith({foo: 'bar'});
+      expect(component.myProp).toEqual({foo: 'bar'});
+    });
+  });
+
+  describe('getter and setter via setAttribute and removeAttribute', () => {
+    test('String property', () => {
+      const setterFn = vi.fn();
+      const Component = class extends WebComponent {
+        static properties = {
+          myProp: {type: String}
+        };
+        set _myProp(value: string | null) {
           setterFn(value);
         }
       };
@@ -121,20 +182,22 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith('hello world');
+      expect(component.myProp).toEqual('hello world');
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
+      expect(component.myProp).toEqual(null);
     });
 
-    test.fails('Number property', () => {
+    test('Number property', () => {
       const setterFn = vi.fn();
       const Component = class extends WebComponent {
         static properties = {
           myProp: {type: Number}
         };
-        set myProp(value: number | null) {
+        set _myProp(value: number | null) {
           setterFn(value);
         }
       };
@@ -145,20 +208,22 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(42);
+      expect(component.myProp).toEqual(42);
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
+      expect(component.myProp).toEqual(null);
     });
 
-    test.fails('Boolean property', () => {
+    test('Boolean property', () => {
       const setterFn = vi.fn();
       const Component = class extends WebComponent {
         static properties = {
           myProp: {type: Boolean}
         };
-        set myProp(value: boolean) {
+        set _myProp(value: boolean) {
           setterFn(value);
         }
       };
@@ -169,20 +234,22 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(true);
+      expect(component.myProp).toEqual(true);
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(false);
+      expect(component.myProp).toEqual(false);
     });
 
-    test.fails('Object property', () => {
+    test('Object property', () => {
       const setterFn = vi.fn();
       const Component = class extends WebComponent {
         static properties = {
           myProp: {type: Object}
         };
-        set myProp(value: object) {
+        set _myProp(value: object) {
           setterFn(value);
         }
       };
@@ -193,111 +260,13 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith('something');
+      expect(component.myProp).toEqual('something');
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
-    });
-  });
-
-  describe('call setter via attributeChangedCallback', () => {
-    // Can be removed if setAttribute and removeAttribute tests work
-
-    test('String property', () => {
-      const setterFn = vi.fn();
-      const Component = class extends WebComponent {
-        static properties = {
-          myProp: {type: String}
-        };
-        set myProp(value: string | null) {
-          setterFn(value);
-        }
-      };
-      window.customElements.define(`test-component-${counter}`, Component);
-
-      const component = new Component();
-      component.attributeChangedCallback('myProp', '', 'hello world');
-
-      expect(setterFn).toHaveBeenCalledOnce();
-      expect(setterFn).toHaveBeenCalledWith('hello world');
-
-      component.attributeChangedCallback('myProp', '', null);
-
-      expect(setterFn).toHaveBeenCalledTimes(2);
-      expect(setterFn).toHaveBeenLastCalledWith(null);
-    });
-
-    test('Number property', () => {
-      const setterFn = vi.fn();
-      const Component = class extends WebComponent {
-        static properties = {
-          myProp: {type: Number}
-        };
-        set myProp(value: number | null) {
-          setterFn(value);
-        }
-      };
-      window.customElements.define(`test-component-${counter}`, Component);
-
-      const component = new Component();
-      component.attributeChangedCallback('myProp', '', '42');
-
-      expect(setterFn).toHaveBeenCalledOnce();
-      expect(setterFn).toHaveBeenCalledWith(42);
-
-      component.attributeChangedCallback('myProp', '', null);
-
-      expect(setterFn).toHaveBeenCalledTimes(2);
-      expect(setterFn).toHaveBeenLastCalledWith(null);
-    });
-
-    test('Boolean property', () => {
-      const setterFn = vi.fn();
-      const Component = class extends WebComponent {
-        static properties = {
-          myProp: {type: Boolean}
-        };
-        set myProp(value: boolean) {
-          setterFn(value);
-        }
-      };
-      window.customElements.define(`test-component-${counter}`, Component);
-
-      const component = new Component();
-      component.attributeChangedCallback('myProp', '', '');
-
-      expect(setterFn).toHaveBeenCalledOnce();
-      expect(setterFn).toHaveBeenCalledWith(true);
-
-      component.attributeChangedCallback('myProp', '', null);
-
-      expect(setterFn).toHaveBeenCalledTimes(2);
-      expect(setterFn).toHaveBeenLastCalledWith(false);
-    });
-
-    test('Object property', () => {
-      const setterFn = vi.fn();
-      const Component = class extends WebComponent {
-        static properties = {
-          myProp: {type: Object}
-        };
-        set myProp(value: object) {
-          setterFn(value);
-        }
-      };
-      window.customElements.define(`test-component-${counter}`, Component);
-
-      const component = new Component();
-      component.attributeChangedCallback('myProp', '', 'something');
-
-      expect(setterFn).toHaveBeenCalledOnce();
-      expect(setterFn).toHaveBeenCalledWith('something');
-
-      component.attributeChangedCallback('myProp', '', null);
-
-      expect(setterFn).toHaveBeenCalledTimes(2);
-      expect(setterFn).toHaveBeenLastCalledWith(null);
+      expect(component.myProp).toEqual(null);
     });
   });
 });
