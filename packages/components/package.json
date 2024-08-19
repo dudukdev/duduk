@@ -1,6 +1,6 @@
 {
   "name": "@duduk/components",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.1",
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
   "files": [

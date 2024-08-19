@@ -1,6 +1,6 @@
 {
   "name": "@duduk/server",
-  "version": "0.0.0",
+  "version": "1.0.0-alpha.1",
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
   "files": [
@@ -15,9 +15,9 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@duduk/content-negotiation": "^0.0.0",
-    "@duduk/cookies": "^0.0.0",
-    "@duduk/ssr": "^0.0.0",
+    "@duduk/content-negotiation": "^1.0.0-alpha.1",
+    "@duduk/cookies": "^1.0.0-alpha.1",
+    "@duduk/ssr": "^1.0.0-alpha.1",
     "esbuild": "^0.23.0",
     "mime": "^4.0.4"
   }
