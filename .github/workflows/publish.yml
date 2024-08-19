@@ -8,13 +8,13 @@ on:
         description: 'Package'
         type: choice
         options:
-          - @duduk/components
-          - @duduk/content-negotiation
-          - @duduk/cookies
-          - @duduk/localization
-          - @duduk/messaging
-          - @duduk/server
-          - @duduk/ssr
+          - '@duduk/components'
+          - '@duduk/content-negotiation'
+          - '@duduk/cookies'
+          - '@duduk/localization'
+          - '@duduk/messaging'
+          - '@duduk/server'
+          - '@duduk/ssr'
 
 jobs:
   publish:
