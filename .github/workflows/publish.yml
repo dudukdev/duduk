@@ -1,5 +1,5 @@
 name: Publish Package to npmjs
-run-name: Publish ${{ input.package }}
+run-name: Publish ${{ inputs.package }}
 
 on:
   workflow_dispatch:
