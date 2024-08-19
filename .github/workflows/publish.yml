@@ -1,12 +1,20 @@
 name: Publish Package to npmjs
-run-name: Publish {{ input.package }}
+run-name: Publish ${{ input.package }}
 
 on:
   workflow_dispatch:
     inputs:
       package:
-        description: 'Name of package that shall be published'
-        required: true
+        description: 'Package'
+        type: choice
+        options:
+          - @duduk/components
+          - @duduk/content-negotiation
+          - @duduk/cookies
+          - @duduk/localization
+          - @duduk/messaging
+          - @duduk/server
+          - @duduk/ssr
 
 jobs:
   publish:
