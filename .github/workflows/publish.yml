@@ -1,4 +1,5 @@
 name: Publish Package to npmjs
+run-name: Publish {{ input.package }}
 
 on:
   workflow_dispatch:
@@ -10,25 +11,10 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: [
-          '@duduk/components',
-          '@duduk/content-negotiation',
-          '@duduk/cookies',
-          '@duduk/localization',
-          '@duduk/messaging',
-          '@duduk/server',
-          '@duduk/ssr'
-        ]
     permissions:
       contents: read
       id-token: write
     steps:
-      - name: Publish
-        if: ${{ matrix.package == github.event.inputs.package }}
-        run:
-          echo "Publishing package ${{ matrix.package }}"
       - uses: actions/checkout@v4
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
@@ -37,6 +23,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm run build
-      - run: npm publish --provenance --access public --workspace ${{ matrix.package }}
+      - run: npm publish --provenance --access public --workspace ${{ inputs.package }} --dry-run
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
