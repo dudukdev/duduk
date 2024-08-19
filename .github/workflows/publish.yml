@@ -2,6 +2,10 @@ name: Publish Package to npmjs
 
 on:
   workflow_dispatch:
+    inputs:
+      package:
+        description: 'Name of package that shall be published'
+        required: true
 
 jobs:
   publish:
@@ -21,6 +25,10 @@ jobs:
       contents: read
       id-token: write
     steps:
+      - name: Publish
+        if: ${{ matrix.package == github.event.inputs.package }}
+        run:
+          echo "Publishing package ${{ matrix.package }}"
       - uses: actions/checkout@v4
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
