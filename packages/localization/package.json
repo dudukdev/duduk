@@ -3,6 +3,11 @@
   "version": "1.0.0-alpha.1",
   "type": "module",
   "author": "Veit Kunz <git@veit-kunz.de>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dudukdev/duduk.git",
+    "directory": "packages/localization"
+  },
   "files": [
     "dist"
   ],
