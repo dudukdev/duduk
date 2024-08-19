@@ -96,10 +96,12 @@ describe('properties', () => {
       window.customElements.define(`test-component-${counter}`, Component);
 
       const component = new Component();
+      // @ts-ignore
       component.myProp = 'hello world';
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith('hello world');
+      // @ts-ignore
       expect(component.myProp).toEqual('hello world');
     });
 
@@ -116,10 +118,12 @@ describe('properties', () => {
       window.customElements.define(`test-component-${counter}`, Component);
 
       const component = new Component();
+      // @ts-ignore
       component.myProp = 42;
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(42);
+      // @ts-ignore
       expect(component.myProp).toEqual(42);
     });
 
@@ -136,10 +140,12 @@ describe('properties', () => {
       window.customElements.define(`test-component-${counter}`, Component);
 
       const component = new Component();
+      // @ts-ignore
       component.myProp = true;
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(true);
+      // @ts-ignore
       expect(component.myProp).toEqual(true);
     });
 
@@ -156,10 +162,12 @@ describe('properties', () => {
       window.customElements.define(`test-component-${counter}`, Component);
 
       const component = new Component();
+      // @ts-ignore
       component.myProp = {foo: 'bar'};
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith({foo: 'bar'});
+      // @ts-ignore
       expect(component.myProp).toEqual({foo: 'bar'});
     });
   });
@@ -182,12 +190,14 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith('hello world');
+      // @ts-ignore
       expect(component.myProp).toEqual('hello world');
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
+      // @ts-ignore
       expect(component.myProp).toEqual(null);
     });
 
@@ -208,12 +218,14 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(42);
+      // @ts-ignore
       expect(component.myProp).toEqual(42);
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
+      // @ts-ignore
       expect(component.myProp).toEqual(null);
     });
 
@@ -234,12 +246,14 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith(true);
+      // @ts-ignore
       expect(component.myProp).toEqual(true);
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(false);
+      // @ts-ignore
       expect(component.myProp).toEqual(false);
     });
 
@@ -260,12 +274,14 @@ describe('properties', () => {
 
       expect(setterFn).toHaveBeenCalledOnce();
       expect(setterFn).toHaveBeenCalledWith('something');
+      // @ts-ignore
       expect(component.myProp).toEqual('something');
 
       component.removeAttribute('myProp');
 
       expect(setterFn).toHaveBeenCalledTimes(2);
       expect(setterFn).toHaveBeenLastCalledWith(null);
+      // @ts-ignore
       expect(component.myProp).toEqual(null);
     });
   });
