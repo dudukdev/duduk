@@ -14,7 +14,7 @@
   "main": "dist/index.mjs",
   "types": "dist/index.d.mts",
   "dependencies": {
-    "jsdom": "^24.1.1"
+    "jsdom": "^25.0.0"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7"
