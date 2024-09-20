@@ -103,6 +103,7 @@ describe('properties', () => {
       expect(setterFn).toHaveBeenCalledWith('hello world');
       // @ts-ignore
       expect(component.myProp).toEqual('hello world');
+      expect(component.getAttribute('myprop')).toEqual('hello world');
     });
 
     test('Number property', () => {
@@ -125,9 +126,10 @@ describe('properties', () => {
       expect(setterFn).toHaveBeenCalledWith(42);
       // @ts-ignore
       expect(component.myProp).toEqual(42);
+      expect(component.getAttribute('myprop')).toEqual('42');
     });
 
-    test('Boolean property', () => {
+    test('Boolean property true', () => {
       const setterFn = vi.fn();
       const Component = class extends WebComponent {
         static properties = {
@@ -147,6 +149,16 @@ describe('properties', () => {
       expect(setterFn).toHaveBeenCalledWith(true);
       // @ts-ignore
       expect(component.myProp).toEqual(true);
+      expect(component.hasAttribute('myprop')).toBeTruthy();
+
+      // @ts-ignore
+      component.myProp = false;
+
+      expect(setterFn).toHaveBeenCalledTimes(2);
+      expect(setterFn).toHaveBeenCalledWith(false);
+      // @ts-ignore
+      expect(component.myProp).toEqual(false);
+      expect(component.hasAttribute('myprop')).toBeFalsy();
     });
 
     test('Object property', () => {
@@ -169,6 +181,7 @@ describe('properties', () => {
       expect(setterFn).toHaveBeenCalledWith({foo: 'bar'});
       // @ts-ignore
       expect(component.myProp).toEqual({foo: 'bar'});
+      expect(component.hasAttribute('myprop')).toBeFalsy();
     });
   });
 

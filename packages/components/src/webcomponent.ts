@@ -34,8 +34,14 @@ export class WebComponent extends HTMLElement {
       Object.defineProperty(this, name, {
         get: () => this.propertyState[name] ?? this.#parseStringToPropertyValue(this.getAttribute(name.toLowerCase()), options),
         set: (value) => {
-          if (options.type === String || options.type === Number || options.type === Boolean) {
+          if (options.type === String || options.type === Number) {
             this.setAttribute(name, value);
+          } else if (options.type === Boolean) {
+            if (value === true) {
+              this.setAttribute(name, '');
+            } else {
+              this.removeAttribute(name);
+            }
           } else {
             // @ts-ignore
             this[`_${name}`] = value;
