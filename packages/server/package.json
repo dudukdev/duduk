@@ -23,7 +23,7 @@
     "@duduk/content-negotiation": "^1.0.0-alpha.1",
     "@duduk/cookies": "^1.0.0-alpha.1",
     "@duduk/ssr": "^1.0.0-alpha.1",
-    "esbuild": "^0.24.2",
+    "esbuild": "^0.25.0",
     "mime": "^4.0.6"
   }
 }
